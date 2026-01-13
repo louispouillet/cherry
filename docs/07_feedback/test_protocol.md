@@ -1,6 +1,6 @@
-# Description of what was asked to the testers
+# <center> Description of what was asked to the testers </center>
 
-What I said to the tester before starting the test:
+**What I said to the tester before starting the test:**
 
 "Hello, so this is our application web that we are working on, it is an app that will allows you to find or propose some event for the people around you. It is made so that you can easily find something to do when you are bored or want to meet new people.
 So what I would like you to do is to try the application as if you were a new user, that wanted to use it and make me a feedback on your own experience, and on what you think can be improuved, changed, modified or even added or removed.

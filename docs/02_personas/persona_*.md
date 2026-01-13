@@ -1,8 +1,8 @@
-# Personas :
+# <center> Personas </center>
 
-The personas created based on the interviews conducted to better understand the target users for our web application.
+<center>The personas created based on the interviews conducted to better understand the target users for our web application</center>
 
-## Persona 1 – Young Social Explorer
+## <center> Persona 1 – Young Social Explorer </center>
 
 ### Profile
 - Age: 18–35
@@ -34,7 +34,7 @@ The personas created based on the interviews conducted to better understand the 
 
 ---
 
-## Persona 2 – Busy Social Planner
+## <center> Persona 2 – Busy Social Planner </center>
 
 ### Profile
 - Age: 36–65
@@ -66,7 +66,7 @@ The personas created based on the interviews conducted to better understand the 
 
 ---
 
-## Persona 3 – Active Retiree
+## <center> Persona 3 – Active Retiree </center>
 
 ### Profile
 - Age: 66+
@@ -98,7 +98,7 @@ The personas created based on the interviews conducted to better understand the 
 
 ---
 
-## Persona 4 – New City Newcomer
+## <center> Persona 4 – New City Newcomer </center>
 
 ### Profile
 - Age: 18–50

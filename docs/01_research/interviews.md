@@ -1,9 +1,8 @@
-# **Interview**
+# <center> Interview </center>
 
-This page is dedicated to the interview we did on some people. We aksed around to see if our web application was interesting, if they will use it, or even what they think of it more generally. This will be resumed in four categories : Needs, Frustrations, Habits, Expectations, and the profil of the interviewee if they gave us some information about them.
+<center>This page is dedicated to the interview we did on some people. We aksed around to see if our web application was interesting, if they will use it, or even what they think of it more generally. This will be resumed in four categories : Needs, Frustrations, Habits, Expectations, and the profil of the interviewee if they gave us some information about them.</center>
 
-
-## **Interview 1 :** 
+## <center> Interview 1 </center>
 
 - <ins>***Profil :***</ins>
     - Age : 23
@@ -25,7 +24,7 @@ This page is dedicated to the interview we did on some people. We aksed around t
   -  A chat feature, a way to see the profile of the people, and a way to filter the activities.
   -  The ads, the fake profiles, and the harassment.
 
-## **Interview 2 :**
+## <center> Interview 2 </center>
 
 - <ins>***Profil :***</ins>
     - Age : 45
@@ -47,7 +46,7 @@ This page is dedicated to the interview we did on some people. We aksed around t
   -  A calendar feature to see when you have a activity planned, and a recommendation system for the people
   -  The constant notifications, the privacy concerns.
 
-## **Interview 3 :**
+## <center> Interview 3 </center>
 
 - <ins>***Profil :***</ins>
     - Age : 75
