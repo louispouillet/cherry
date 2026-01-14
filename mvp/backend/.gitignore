@@ -10,4 +10,4 @@
 *yarn-error.log*
 
 # OS files
-*.DS_Store
+*.DS_Storeop^$
