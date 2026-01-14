@@ -52,13 +52,12 @@
 
 * Header with Stats: The top of the profile displays the user's name, age, and key metrics: "Friends" and "Participated events". Placing these at the top provides immediate social proof and a summary of the user's activity within the Cherry community.
 
-* Large Profile Showcase: A prominent, high-quality image occupies the central part of the screen. This visual approach maintains consistency with the Home screen's "Story" aesthetic.
+* Profile: A prominent, high-quality image occupies the central part of the screen. This visual approach maintains consistency with the Home screen's "Story" aesthetic.
 
-* Rating Badge: A small numerical rating is positioned in the top right corner of the profile picture. This offers a quick view of the user's reputation based on community feedback.
+* Rating: A small numerical rating is positioned in the top right corner of the profile picture. This offers a quick view of the user's reputation based on community feedback.
 
 * Hobbies: under the photo, "Hobbies" are displayed as clean rounded chips ("video games", "movies"). This categorization allows other users to quickly identify interests.
 
 * About me: A dedicated text box at the bottom provides a brief personal introduction. Using a distinct card layout with a quotation mark icon makes the bio stand out as a personal message from the user.
 
-* Persistent Global Navigation: The bottom bar remains fixed with the "message" icon highlighted. This ensures the user can always access their settings or return to discovery with a single tap.
 
