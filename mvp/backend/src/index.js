@@ -16,18 +16,15 @@ app.use(cors());
 // Routes
 const auth = require('./routes/Auth/auth.js');
 const user = require('./routes/Users/users.js');
-const groupe = require('./routes/Groupe/groupe.js');
+const groupe = require('./routes/Group/group.js');
 const middnot = require('./middelware/NotFound.js');
 
-// A décommenter lorsque les routes seront prêtes
 //app.use('/', auth);
-//app.use('/', groupe);
+app.use('/', groupe);
 //app.use('/', user);
-
-// Not found
 //app.use(middnot);
 
 // Lancer le serveur
 app.listen(port, () =>
-  console.log(`🚀 Server lancé à l'url : http://localhost:${port}`)
+  console.log(`Server lancé à l'url : http://localhost:${port}`)
 );
