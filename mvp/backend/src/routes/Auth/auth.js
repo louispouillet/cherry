@@ -7,16 +7,16 @@ require("dotenv").config();
 
 router.post("/login", async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { number, password } = req.body;
 
-    if (!email || !password) {
+    if (!number || !password) {
       return res.status(400).json({ msg: "Bad parameter" });
     }
 
     const conn = await db;
     const [rows] = await conn.query(
-      `SELECT id, email, password FROM user WHERE email = ?`,
-      [email]
+      `SELECT id, number, password FROM user WHERE number = ?`,
+      [number]
     );
 
     if (rows.length === 0) {
@@ -30,7 +30,7 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ msg: "Invalid credentials" });
     }
 
-    const payload = { email: user.email, id: user.id };
+    const payload = { number: user.number, id: user.id };
     const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
@@ -46,15 +46,15 @@ router.post("/login", async (req, res) => {
 router.post("/register", async (req, res) => {
   try {
     const conn = await db;
-    const { email, password, name, firstname } = req.body;
+    const { number, password, name, firstname } = req.body;
 
-    if (!email || !password || !name || !firstname) {
+    if (!number || !password || !name || !firstname) {
       return res.status(400).json({ msg: "Bad parameter" });
     }
 
     const [existingUser] = await conn.query(
-      "SELECT id FROM user WHERE email = ?",
-      [email]
+      "SELECT id FROM user WHERE number = ?",
+      [number]
     );
 
     if (existingUser.length > 0) {
@@ -64,11 +64,11 @@ router.post("/register", async (req, res) => {
     const hashPassword = await bcrypt.hash(password, 10);
 
     const [result] = await conn.query(
-      "INSERT INTO user (email, password, name, firstname) VALUES (?, ?, ?, ?)",
-      [email, hashPassword, name, firstname]
+      "INSERT INTO user (number, password, name, firstname) VALUES (?, ?, ?, ?)",
+      [number, hashPassword, name, firstname]
     );
 
-    const payload = { email: email, id: result.insertId };
+    const payload = { number: number, id: result.insertId };
     const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
@@ -78,6 +78,14 @@ router.post("/register", async (req, res) => {
   } catch (err) {
     return res.status(500).json({ msg: "Internal server error" });
   }
+});
+
+router.post("/test", async (req, res) => {
+    try {
+        return res.status(200).json({ msg: "ok" });
+    } catch (err) {
+        return res.status(500).json({ msg: "err" });
+    }
 });
 
 module.exports = router;
