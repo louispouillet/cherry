@@ -21,12 +21,12 @@ const groupe = require('./routes/Group/group.js');
 const event = require('./routes/Event/event.js');
 const middnot = require('./middelware/NotFound.js');
 
+app.use(express.json());
 app.use('/', auth);
-//app.use('/', groupe);
+app.use('/', groupe);
 app.use('/', event);
 app.use('/', user);
 //app.use(middnot);
-app.use(express.json());
 
 // Lancer le serveur
 app.listen(port, () =>

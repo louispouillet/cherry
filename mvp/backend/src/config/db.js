@@ -12,7 +12,7 @@ async function connectDB() {
   try {
     client = new MongoClient(uri);
     await client.connect();
-    db = client.db(process.env.MONGODB_DB_NAME );
+    db = client.db(process.env.MONGODB_DB_NAME);
 
     return db;
   } catch (error) {

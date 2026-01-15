@@ -25,7 +25,7 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ msg: "Invalid credentials" });
     }
     const payload = { id: result.insertId };
-    const accessToken = jwt.sign(payload, "MaSuperCléSecrèteUltraSécurisée", {
+    const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
     return res.status(201).json({ token: accessToken });
@@ -61,7 +61,7 @@ router.post("/register", async (req, res) => {
     };
     const result = await conn.collection("Users").insertOne(newUser);
     const payload = { id: result.insertId };
-    const accessToken = jwt.sign(payload, "MaSuperCléSecrèteUltraSécurisée", {
+    const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
     return res.status(201).json({ token: accessToken });
