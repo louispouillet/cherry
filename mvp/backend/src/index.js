@@ -18,6 +18,7 @@ app.use(cors());
 const auth = require('./routes/Auth/auth.js');
 const user = require('./routes/Users/users.js');
 const groupe = require('./routes/Group/group.js');
+const event = require('./routes/Event/event.js');
 const middnot = require('./middelware/NotFound.js');
 
 //app.use('/', auth);
