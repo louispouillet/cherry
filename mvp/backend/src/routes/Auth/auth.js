@@ -6,86 +6,69 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 router.post("/login", async (req, res) => {
+  //password123
+  const conn = await db();
+  const { phone, password } = req.body;
+  if (!phone || !password) {
+    return res.status(400).json({ msg: "Bad parameter" });
+  }
   try {
-    const { number, password } = req.body;
-
-    if (!number || !password) {
-      return res.status(400).json({ msg: "Bad parameter" });
-    }
-
-    const conn = await db;
-    const [rows] = await conn.query(
-      `SELECT id, number, password FROM user WHERE number = ?`,
-      [number]
-    );
-
-    if (rows.length === 0) {
+    const result = await conn
+      .collection("Users")
+      .find({ phone: phone })
+      .toArray();
+    if (result[0].length === 0) {
       return res.status(404).json({ msg: "User not found" });
     }
-
-    const user = rows[0];
-    const isMatch = await bcrypt.compare(password, user.password);
-
+    const isMatch = await bcrypt.compare(password, result[0].password);
     if (!isMatch) {
       return res.status(401).json({ msg: "Invalid credentials" });
     }
-
-    const payload = { number: user.number, id: user.id };
+    const payload = { id: result.insertId };
     const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
-
-    return res.status(200).json({ token: accessToken });
-
+    return res.status(201).json({ token: accessToken });
   } catch (err) {
-    return res.status(500).json({ msg: "Internal server error" });
+    console.error("Erreur détaillée :", err);
+    return res.status(500).json({ error: err.message });
   }
 });
-
 
 router.post("/register", async (req, res) => {
+  const { phone, password, birthdate, firstname, lastname, description, hobbies, picture } = req.body;
+  const conn = await db();
+  if (!phone || !password || !birthdate || !firstname || !lastname) {
+    return res.status(400).json({ msg: "Bad parameter" });
+  }
   try {
-    const conn = await db;
-    const { number, password, name, firstname } = req.body;
-
-    if (!number || !password || !name || !firstname) {
-      return res.status(400).json({ msg: "Bad parameter" });
-    }
-
-    const [existingUser] = await conn.query(
-      "SELECT id FROM user WHERE number = ?",
-      [number]
-    );
-
-    if (existingUser.length > 0) {
+    const existingUser = await conn
+      .collection("Users")
+      .findOne({ phone: phone });
+    if (existingUser) {
       return res.status(409).json({ msg: "Account already exists" });
     }
-
     const hashPassword = await bcrypt.hash(password, 10);
-
-    const [result] = await conn.query(
-      "INSERT INTO user (number, password, name, firstname) VALUES (?, ?, ?, ?)",
-      [number, hashPassword, name, firstname]
-    );
-
-    const payload = { number: number, id: result.insertId };
+    const newUser = {
+      phone,
+      password: hashPassword,
+      birthdate,
+      firstname,
+      lastname,
+      description,
+      hobbies,
+      picture,
+    };
+    const result = await conn.collection("Users").insertOne(newUser);
+    const payload = { id: result.insertId };
     const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
-
     return res.status(201).json({ token: accessToken });
-
   } catch (err) {
-    return res.status(500).json({ msg: "Internal server error" });
+    console.error("Erreur détaillée :", err);
+    return res.status(500).json({ error: err.message });
   }
-});
-
-router.post("/test", async (req, res) => {
-    try {
-        return res.status(200).json({ msg: "ok" });
-    } catch (err) {
-        return res.status(500).json({ msg: "err" });
-    }
 });
 
 module.exports = router;
