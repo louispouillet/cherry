@@ -15,19 +15,19 @@ router.post("/login", async (req, res) => {
   try {
     const result = await conn
       .collection("Users")
-      .find({ phone: phone })
-      .toArray();
-    if (result[0].length === 0) {
+      .findOne({ phone: phone });
+    if (!result) {
       return res.status(404).json({ msg: "User not found" });
     }
-    const isMatch = await bcrypt.compare(password, result[0].password);
+    const isMatch = await bcrypt.compare(password, result.password);
     if (!isMatch) {
       return res.status(401).json({ msg: "Invalid credentials" });
     }
-    const payload = { id: result.insertedId };
+    const payload = { id: result._id };
     const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
+    console.log(payload);
     return res.status(201).json({ token: accessToken });
   } catch (err) {
     console.error("Erreur détaillée :", err);
