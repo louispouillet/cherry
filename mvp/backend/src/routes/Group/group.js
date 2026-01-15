@@ -1,15 +1,15 @@
 const express = require("express");
 const router = express.Router();
+const auth = require ("../../middelware/auth");
 const { AddUserToGroup , QuitTheGroup } =  require("./group.query");
 
-router.post('/add_user', /* auth , */async (req, res) => {
+router.post('/add_user',  auth , async (req, res) => {
   try {
     /*
     const { event_id } = req.body;
-    const { user_id } = payload.id; */
-    const user_id = "7040ad9ac992a68dad3df0a8";
+     */
+    const user_id  = req.payload.id;
     const event_id = "6968ad9ac992a68dad3df0a8";
-    console.log("testtttttt");
     const result = await AddUserToGroup(user_id, event_id);
     res.status(200).json({ message : "Successfully added"});
   } catch (err) {
@@ -17,9 +17,10 @@ router.post('/add_user', /* auth , */async (req, res) => {
   }
 })
 
-router.delete("/quit_group", /* auth , */ async (req , res) => {
+router.delete("/quit_group", auth , async (req , res) => {
     try {
-        const user_id = "7040ad9ac992a68dad3df0a8";
+        const user_id  = req.payload.id;
+        console.log(user_id);
         const event_id = "6968ad9ac992a68dad3df0a8";
         const result = await QuitTheGroup(user_id, event_id);
         res.status(200).json({ message : "You successfuly quitted the group"});
