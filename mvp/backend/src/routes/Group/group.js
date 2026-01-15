@@ -9,6 +9,7 @@ router.post('/add_user', /* auth , */async (req, res) => {
     const { user_id } = payload.id; */
     const user_id = "7040ad9ac992a68dad3df0a8";
     const event_id = "6968ad9ac992a68dad3df0a8";
+    console.log("testtttttt");
     const result = await AddUserToGroup(user_id, event_id);
     res.status(200).json({ message : "Successfully added"});
   } catch (err) {
