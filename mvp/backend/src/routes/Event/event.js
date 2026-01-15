@@ -6,18 +6,18 @@ const { getEventById, getEventsAll, getUsersEvent } = require('../Event/event.qu
 
 // affiche les listes des events (page d'accueil des events)
 router.get('/events', async (req, res) => {
-  try {
-    const events = await getEventsAll() // récupère tous les events de la db
-    res.status(200).json(events)
-  } catch (error) {
-    res.status(500).json({ message: 'Internal Server Error' })
-  }
+    try {
+        const events = await getEventsAll() // récupère tous les events de la db
+        res.status(200).json(events)
+    } catch (error) {
+        res.status(500).json({ message: 'Internal Server Error' })
+    }
 })
 
 // affiche les détails d'un event précis
-router.get ('/events/:id', async (req, res) => {
-  const eventId = req.params.id // Récupère l'ID de l'event de l'URL
-    try {           
+router.get('/events/:id', async (req, res) => {
+    const eventId = req.params.id // Récupère l'ID de l'event de l'URL
+    try {
         const event = await getEventById(eventId) // récupère l'event de la db
         if (!event) {
             return res.status(404).json({ message: 'Event not found' })
@@ -35,9 +35,32 @@ router.get('/events/:id/users', async (req, res) => {
         const users = await getUsersEvent(eventId); // récupère les users de l'event de la db
         res.status(200).json(users);
     } catch (error) {
-        res.status(500).json({ message: 'Internal Server Error' }); 
+        res.status(500).json({ message: 'Internal Server Error' });
     }
 });
+
+// créer un nouvel event
+router.post('/events/new', async (req, res) => {
+    try {
+        const { name, date, location, description } = req.body;
+
+        const newEvent = {
+            name,
+            date,
+            location,
+            description,
+            users: [] // Initialise avec une liste vide d'utilisateurs
+        };
+        const result = await getCreateEvent(newEvent);
+
+        res.status(201).json({ message: 'Event created' });
+        
+    } catch (error) {
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
+);
 
 
 module.exports = router;
