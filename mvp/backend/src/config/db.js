@@ -1,6 +1,7 @@
 const { MongoClient } = require("mongodb");
+require('dotenv').config();
 
-const uri = "mongodb://mongo:BzrYZlGzBdVXtXdieIoZugSUfrlfBHKP@mainline.proxy.rlwy.net:40157";
+const uri = process.env.MONGODB_URI;
 
 let client;
 let db;
@@ -13,8 +14,7 @@ async function connectDB() {
   try {
     client = new MongoClient(uri);
     await client.connect();
-
-    db = client.db("Cherry");
+    db = client.db("" + process.env.MONGODB_DB_NAME);
 
     return db;
   } catch (error) {
