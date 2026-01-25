@@ -8,10 +8,13 @@ require("dotenv").config();
 router.post("/login", async (req, res) => {
   //password123
   const conn = await db();
+  const phoneRegex = /^0[67]\d{8}$/; // Pour verifier si c'est bien un telephone qui est donné
+
   const { phone, password } = req.body;
   if (!phone || !password) {
     return res.status(400).json({ msg: "Bad parameter" });
   }
+
   try {
     const result = await conn
       .collection("Users")
