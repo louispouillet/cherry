@@ -25,13 +25,13 @@ const Register = () => {
         setError("");
         const phone_string = phone.replace(/\s/g, ''); // Supprime tous les espaces en trop
         if (!phoneRegex.test(phone_string)) {
-            window.alert("Format de téléphone invalide (attendu : 06/07 suivi de 8 chiffres).");
+            window.alert("Invalid phone number format (expected: 06/07 followed by 8 digits).");
             return;
         }
 
         const birth = new Date(birthdate);
         if (Number.isNaN(birth.getTime())) {
-            window.alert("Date de naissance invalide.");
+            window.alert("Invalid birthdate.");
             return;
         }
         const today = new Date();
@@ -41,11 +41,11 @@ const Register = () => {
             age -= 1;
         }
         if (age < 18) {
-            window.alert("Trop jeune : 18 ans minimum.");
+            window.alert("Too young: minimum 18 years old.");
             return;
         }
         if (age > 110) {
-            window.alert("Âge incohérent (plus de 110 ans)." );
+            window.alert("Incoherent age (over 110 years old).");
             return;
         }
         try {
@@ -55,10 +55,10 @@ const Register = () => {
         } catch (err: any) {
             console.error(err);
             if (err.response?.status === 409) { // Code d'erreur si le compte existe deja
-                window.alert("Ce numéro de téléphone est déjà utilisé.");
+                window.alert("This phone number is already in use.");
                 navigate("/login");
             } else {
-                window.alert("Une erreur est survenue lors de l'inscription.");
+                window.alert("An error occurred during registration.");
             }
         }
     }
@@ -71,20 +71,20 @@ const Register = () => {
             <div className="container">
                 <form onSubmit={handleSubmit}>
                     {error && <div style={{ color: 'red', marginBottom: '15px', textAlign: 'center' }}>{error}</div>}
-                    <input id="firstname" type="text" placeholder="Prénom" className="input" onChange={(e) => setFirstname(e.target.value)} required /><br></br>
-                    <input id="lastname" type="text" placeholder="Nom" className="input" onChange={(e) => setLastname(e.target.value)} required /><br></br>
-                    <input id="phone" type="tel" placeholder="Numéro de téléphone" className="input" onChange={(e) => setPhone(e.target.value)} required /><br></br>
-                    <input id="password" type="password" placeholder="Mot de passe" className="input" onChange={(e) => setPassword(e.target.value)} required /><br></br>
-                    <input id="birthdate" type="date" placeholder="Date de naissance" className="input" onChange={(e) => setBirthdate(e.target.value)} required /><br></br>
+                    <input id="firstname" type="text" placeholder="First name" className="input" onChange={(e) => setFirstname(e.target.value)} required /><br></br>
+                    <input id="lastname" type="text" placeholder="Last name" className="input" onChange={(e) => setLastname(e.target.value)} required /><br></br>
+                    <input id="phone" type="tel" placeholder="Phone number" className="input" onChange={(e) => setPhone(e.target.value)} required /><br></br>
+                    <input id="password" type="password" placeholder="Password" className="input" onChange={(e) => setPassword(e.target.value)} required /><br></br>
+                    <input id="birthdate" type="date" placeholder="Birthdate" className="input" onChange={(e) => setBirthdate(e.target.value)} required /><br></br>
                     <textarea id="description" placeholder="Description" className="input" onChange={(e) => setDescripyion(e.target.value)} required /><br></br>
                     <select id="hobbies" className="input" onChange={(e) => setHobbies(e.target.value)} defaultValue="" required>
-                        <option value="" disabled>Choisir un hobby</option>
+                        <option value="" disabled>Choose a hobby</option>
                         <option value="culture">Culture</option>
-                        <option value="soiree">Soirée</option>
+                        <option value="soiree">Party</option>
                         <option value="sport">Sport</option>
                         <option value="fun">Fun</option>
                     </select><br></br>
-                    <input id="pictures" type="text" placeholder="URL des photos (optionnel)" className="input" onChange={(e) => setPictures(e.target.value)} /><br></br>
+                    <input id="pictures" type="text" placeholder="Photos URL (optional)" className="input" onChange={(e) => setPictures(e.target.value)} /><br></br>
                     <button type="submit" className="button" >Register</button>
                     <p style={{color: "black"}}> Already registered ? <a href="/login"> Login here</a> </p>
                 </form>

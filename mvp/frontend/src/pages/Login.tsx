@@ -22,7 +22,7 @@ const Login = () => {
             localStorage.setItem("token", response.data.token);
         } catch (err:any) {
             console.error(err);
-            window.alert("Utilisateur inconnu enregistre vous !"); // A embelir
+            window.alert("You don't have an account! Please register."); // A embelir
             navigate("/register");
             return;
         }
