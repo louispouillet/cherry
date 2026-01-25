@@ -63,13 +63,14 @@ const Register = () => {
         }
     }
     return (
-        < div >
-            <div className="logo-container">
-                <img src="https://raw.githubusercontent.com/LoucheVDC/Assets/main/cherry.png" alt="logo" />
-            </div>
-            <h1>Cherry</h1>
-            <div className="container">
-                <form onSubmit={handleSubmit}>
+        < div className="auth-bg" >
+            <div className="auth-card">
+                <div className="logo-container">
+                    <img src="https://raw.githubusercontent.com/LoucheVDC/Assets/main/cherry.png" alt="logo" />
+                </div>
+                <h1>Cherry</h1>
+                <div className="container">
+                    <form onSubmit={handleSubmit}>
                     {error && <div style={{ color: 'red', marginBottom: '15px', textAlign: 'center' }}>{error}</div>}
                     <input id="firstname" type="text" placeholder="First name" className="input" onChange={(e) => setFirstname(e.target.value)} required /><br></br>
                     <input id="lastname" type="text" placeholder="Last name" className="input" onChange={(e) => setLastname(e.target.value)} required /><br></br>
@@ -87,7 +88,8 @@ const Register = () => {
                     <input id="pictures" type="text" placeholder="Photos URL (optional)" className="input" onChange={(e) => setPictures(e.target.value)} /><br></br>
                     <button type="submit" className="button" >Register</button>
                     <p style={{color: "black"}}> Already registered ? <a href="/login"> Login here</a> </p>
-                </form>
+                    </form>
+                </div>
             </div>
         </div >
     )

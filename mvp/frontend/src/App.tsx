@@ -1,8 +1,9 @@
-import { useState } from 'react';
 import Login from "./pages/Login";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import NotFound from "./pages/NotFound";
 import Register from './pages/Register';
-import './App.css'
+import Main from './pages/Main';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import './App.css';
 
 const LoginContainer = () => (
   <Login />
@@ -12,17 +13,18 @@ const RegisterContainer = () => (
   <Register />
 );
 
-
 function App() {
 
   return (
     <BrowserRouter>
       <Routes>
-      <Route path="/login" element={<LoginContainer />} />
-       <Route path="/register" element={<RegisterContainer />} />
+        <Route path="/" element={<Main />} />
+        <Route path="/login" element={<LoginContainer />} />
+        <Route path="/register" element={<RegisterContainer />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   )
 }
 
-export default App
+export default App;

@@ -1,5 +1,17 @@
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
 body {
     background-color: white;
+    min-height: 100vh;
+    min-height: 100dvh;
+    background-image: url('https://i.postimg.cc/MG6Fz8z4/background-temp.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 }
 
 h1 {
@@ -29,6 +41,17 @@ h1 {
     display: flex;
     justify-content: center;
     padding: 0 2vh;
+}
+
+.container.vertical {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.container.vertical .button {
+    width: 100%;
+    max-width: 300px;
 }
 
 .container form {
@@ -61,4 +84,34 @@ select.input {
     padding: 12px;
     border-radius: 5px;
     margin-top: 10px;
+}
+
+.auth-bg {
+    min-height: 100vh;
+    min-height: 100dvh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4vh 16px;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 420px;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(4px);
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    padding: 24px 20px;
+}
+
+.auth-card h1 {
+    margin-top: 12px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.auth-card .logo-container {
+    margin-top: 0;
 }

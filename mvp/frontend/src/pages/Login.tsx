@@ -31,13 +31,14 @@ const Login = () => {
 
     }
     return (
-        <div>
-            <div className="logo-container">
-                <img src="https://raw.githubusercontent.com/LoucheVDC/Assets/main/cherry.png" alt="logo" />
-            </div>
-            <h1>Cherry</h1>
-            <div className="container">
-                <form onSubmit={handleSubmit}>
+        <div className="auth-bg">
+            <div className="auth-card">
+                <div className="logo-container">
+                    <img src="https://raw.githubusercontent.com/LoucheVDC/Assets/main/cherry.png" alt="logo" />
+                </div>
+                <h1>Cherry</h1>
+                <div className="container">
+                    <form onSubmit={handleSubmit}>
                     <input
                         id="phone"
                         type="tel"
@@ -49,7 +50,8 @@ const Login = () => {
                     <input id="password" type="password" placeholder="Password" className="input" onChange={(e) => setPassword(e.target.value)} /><br></br>
                     <button type="submit" className="button">Sign in</button>
                     <p style={{color: "black"}}> You don't have an account ? <a href="/register">Register here</a> </p>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     )
