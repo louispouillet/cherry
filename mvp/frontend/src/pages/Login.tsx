@@ -11,9 +11,10 @@ const Login = () => {
 
     async function handleSubmit(event: any) {
         event.preventDefault();
-        const phone_string = phone.trim(); // Pour enlever les espace
+            const phone_string = phone.replace(/\s/g, ''); // Pour enlever tous les espaces en trop
+            console.log("Submitting login for phone:", phone_string);
         if (!phoneRegex.test(phone_string)) {
-            window.alert("Format de téléphone invalide (attendu : 06/07 suivi de 8 chiffres).");
+            window.alert("Invalid phone number format (expected: 06/07 followed by 8 digits).");
             return;
         }
         try {
@@ -40,15 +41,14 @@ const Login = () => {
                     <input
                         id="phone"
                         type="tel"
-                        placeholder="phone number"
+                        placeholder="Phone number"
                         className="input"
-                        pattern="^0[67]\d{8}$"
-                        title="Format attendu : 06 ou 07 suivi de 8 chiffres"
                         onChange={(e) => setPhone(e.target.value)}
                         required
                     /><br></br>
-                    <input id="password" type="password" placeholder="password" className="input" onChange={(e) => setPassword(e.target.value)} /><br></br>
+                    <input id="password" type="password" placeholder="Password" className="input" onChange={(e) => setPassword(e.target.value)} /><br></br>
                     <button type="submit" className="button">Sign in</button>
+                    <p style={{color: "black"}}> You don't have an account ? <a href="/register">Register here</a> </p>
                 </form>
             </div>
         </div>

@@ -23,7 +23,7 @@ const Register = () => {
     async function handleSubmit(event: any) {
         event.preventDefault();
         setError("");
-        const phone_string = phone.trim();
+        const phone_string = phone.replace(/\s/g, ''); // Supprime tous les espaces en trop
         if (!phoneRegex.test(phone_string)) {
             window.alert("Format de téléphone invalide (attendu : 06/07 suivi de 8 chiffres).");
             return;
@@ -86,6 +86,7 @@ const Register = () => {
                     </select><br></br>
                     <input id="pictures" type="text" placeholder="URL des photos (optionnel)" className="input" onChange={(e) => setPictures(e.target.value)} /><br></br>
                     <button type="submit" className="button" >Register</button>
+                    <p style={{color: "black"}}> Already registered ? <a href="/login"> Login here</a> </p>
                 </form>
             </div>
         </div >
