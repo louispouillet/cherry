@@ -5,7 +5,7 @@ const { ObjectId } = require('mongodb');
 async function getEventById(eventId) {
     try {
         const conn = await db();
-        return await conn.collection('events').findOne({ _id: new ObjectId(eventId) });
+        return await conn.collection('Events').findOne({ _id: new ObjectId(eventId) });
     } catch (error) {
         console.error('Mongo query error getEventById:', error);
         throw error;
@@ -16,7 +16,7 @@ async function getEventById(eventId) {
 async function getEventsAll() {
     try {
         const conn = await db();
-        const result =  await conn.collection('events').find({}).toArray();
+        const result =  await conn.collection('Events').find({}).toArray();
         return result; 
     } catch (error) {
         console.error('Mongo query error getEventsAll:', error);
