@@ -11,10 +11,11 @@ const Register = () => {
     const [birthdate, setBirthdate] = useState("");
     const [firstname, setFirstname] = useState("");
     const [lastname, setLastname] = useState("");
-    const [description, setDescripyion] = useState("");
+    const [description, setDescription] = useState("");
     const [hobbies, setHobbies] = useState("");
     const [pictures, setPictures] = useState("");
     const [error, setError] = useState("");
+    const [location, setLocation] = useState("");
     const navigate = useNavigate();
     const phoneRegex = /^0[67]\d{8}$/;
 
@@ -49,7 +50,7 @@ const Register = () => {
             return;
         }
         try {
-            const response = await axios.post(`http://localhost:3000/register`, { phone: phone_string, password, birthdate, firstname, lastname, description, hobbies, pictures });
+            const response = await axios.post(`http://localhost:3000/register`, { phone: phone_string, password, birthdate, firstname, lastname, description, hobbies, pictures, location });
             localStorage.setItem("token", response.data.token);
             navigate("/home");
         } catch (err: any) {
@@ -78,7 +79,8 @@ const Register = () => {
                             <input id="phone" type="tel" placeholder="Phone number" className="input" onChange={(e) => setPhone(e.target.value)} required /><br></br>
                             <input id="password" type="password" placeholder="Password" className="input" onChange={(e) => setPassword(e.target.value)} required /><br></br>
                             <input id="birthdate" type="date" placeholder="Birthdate" className="input" onChange={(e) => setBirthdate(e.target.value)} required /><br></br>
-                            <textarea id="description" placeholder="Description" className="input" onChange={(e) => setDescripyion(e.target.value)} required /><br></br>
+                            <textarea id="description" placeholder="Description" className="input" onChange={(e) => setDescription(e.target.value)} required /><br></br>
+                            <input id="location" placeholder="Location" className="input" onChange={(e) => setLocation(e.target.value)} required /><br></br>
                             <select id="hobbies" className="input" onChange={(e) => setHobbies(e.target.value)} defaultValue="" required>
                                 <option value="" disabled>Choose a hobby</option>
                                 <option value="culture">Culture</option>
