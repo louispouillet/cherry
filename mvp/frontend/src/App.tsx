@@ -17,8 +17,8 @@ function App() {
         <Route path="/" element={<Main />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/chat" element={<Chat />} />
-        <Route path="/home-page" element={<Home />} />
+        <Route path="/message" element={<Chat />} />
+        <Route path="/home" element={<Home />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
