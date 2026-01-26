@@ -2,21 +2,10 @@ import Login from "./pages/Auth/Login";
 import NotFound from "./pages/Auth/NotFound";
 import Register from './pages/Auth/Register';
 import Main from './pages/Auth/Main';
-import Home_page from './pages/Home_page';
+import Chat from "./pages/Chat/Chat";   
+import Home from './pages/Home/Home_page'; 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './App.css';
-
-const LoginContainer = () => (
-  <Login />
-);
-
-const RegisterContainer = () => (
-  <Register />
-);
-
-const Home_pageContainer = () => (
-  <Home_page />
-);
 
 function App() {
 
@@ -28,7 +17,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/chat" element={<Chat />} />
         <Route path="*" element={<NotFound />} />
-        <Route path="/home-page" element={<Home_pageContainer />} />
+        <Route path="/home-page" element={<Home />} />
       </Routes>
     </BrowserRouter>
   )
