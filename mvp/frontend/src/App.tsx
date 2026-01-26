@@ -1,7 +1,7 @@
-import Login from "./pages/Login";
-import NotFound from "./pages/NotFound";
-import Register from './pages/Register';
-import Main from './pages/Main';
+import Login from "./pages/Auth/Login";
+import NotFound from "./pages/Auth/NotFound";
+import Register from './pages/Auth/Register';
+import Main from './pages/Auth/Main';
 import Home_page from './pages/Home_page';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './App.css';

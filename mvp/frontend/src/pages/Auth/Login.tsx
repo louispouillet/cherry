@@ -48,7 +48,7 @@ const Login = () => {
                                 onChange={(e) => setPhone(e.target.value)}
                                 required
                             /><br></br>
-                            <input id="password" type="password" placeholder="Password" className="input" onChange={(e) => setPassword(e.target.value)} /><br></br>
+                            <input id="password" type="password" placeholder="Password" className="input" onChange={(e) => setPassword(e.target.value)} required /><br></br>
                             <button type="submit" className="button">Sign in</button>
                             <p style={{ color: "black" }}> You don't have an account ? <a href="/register">Register here</a> </p>
                         </form>
