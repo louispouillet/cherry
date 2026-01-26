@@ -1,6 +1,5 @@
 
 
-
 const Home_page= () => {
     return (
       <div></div>
