@@ -98,7 +98,6 @@ select.input {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 4vh 16px;
 }
 
 .auth-card {
