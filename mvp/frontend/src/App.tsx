@@ -4,7 +4,7 @@ import Register from './pages/Auth/Register';
 import Main from './pages/Auth/Main';
 import Chat from "./pages/Chat/Chat";   
 import Home from './pages/Home/Home_page'; 
-import Profile from "./pages/Profile/Profile";
+import Profile from "./pages/Profile/Profile_page";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './App.css';
 
