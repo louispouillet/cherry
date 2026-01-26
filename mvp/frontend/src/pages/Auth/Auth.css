@@ -9,8 +9,9 @@ body {
 
 .bg {
     background-color: white;
-    min-height: 100vh;
-    min-height: 100dvh;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
     background-image: url('https://i.postimg.cc/MG6Fz8z4/background-temp.png');
     background-size: cover;
     background-position: center;
@@ -97,7 +98,6 @@ select.input {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 4vh 16px;
 }
 
 .auth-card {

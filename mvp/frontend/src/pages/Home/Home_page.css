@@ -1,0 +1,9 @@
+.title_home{
+    font-size: 48px;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-right: 20px;
+    position: absolute;
+    top: 3%;
+    left: 5%;
+}

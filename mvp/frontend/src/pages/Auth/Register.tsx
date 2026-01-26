@@ -15,7 +15,7 @@ const Register = () => {
     const [hobbies, setHobbies] = useState("");
     const [pictures, setPictures] = useState("");
     const [error, setError] = useState("");
-    const [location, setLocation] = useState("");
+    const [citie, setCitie] = useState("");
     const navigate = useNavigate();
     const phoneRegex = /^0[67]\d{8}$/;
 
@@ -50,7 +50,7 @@ const Register = () => {
             return;
         }
         try {
-            const response = await axios.post(`http://localhost:3000/register`, { phone: phone_string, password, birthdate, firstname, lastname, description, hobbies, pictures, location });
+            const response = await axios.post(`http://localhost:3000/register`, { phone: phone_string, password, birthdate, firstname, lastname, description, hobbies, pictures, citie });
             localStorage.setItem("token", response.data.token);
             navigate("/home");
         } catch (err: any) {
@@ -80,7 +80,7 @@ const Register = () => {
                             <input id="password" type="password" placeholder="Password" className="input" onChange={(e) => setPassword(e.target.value)} required /><br></br>
                             <input id="birthdate" type="date" placeholder="Birthdate" className="input" onChange={(e) => setBirthdate(e.target.value)} required /><br></br>
                             <textarea id="description" placeholder="Description" className="input" onChange={(e) => setDescription(e.target.value)} required /><br></br>
-                            <input id="location" placeholder="Location" className="input" onChange={(e) => setLocation(e.target.value)} required /><br></br>
+                            <input id="citie" placeholder="Citie" className="input" onChange={(e) => setCitie(e.target.value)} required /><br></br>
                             <select id="hobbies" className="input" onChange={(e) => setHobbies(e.target.value)} defaultValue="" required>
                                 <option value="" disabled>Choose a hobby</option>
                                 <option value="culture">Culture</option>
