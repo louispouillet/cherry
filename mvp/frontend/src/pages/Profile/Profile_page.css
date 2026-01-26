@@ -1,14 +1,51 @@
-.profile-picture{
-    width: 150px;
-    height: 150px;
-    border-radius: 50%; /* image en forme de cercle */
-    object-fit: cover; /* image remplisse le conteneur */
+
+.profile-header {
+    text-align: start;
 }
 
-.profile-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    background-color: #0c0c0c;
-} 
+.image-section {
+    width: 500px;
+    margin-bottom: 20px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.profile-picture {
+    width: 100%;
+    max-width: 100vw;
+    border-radius: 25px;
+    /* image en forme de cercle */
+    object-fit: cover;
+    /* image remplisse le conteneur */
+    box-shadow: none;
+
+
+}
+
+/* Style des sections About Me et Hobbies */
+.AboutMe-section,
+.Hobbies-section {
+    background: rgb(197, 81, 81);
+    padding: 16px;
+    border-radius: 50px;
+    margin-bottom: 12px;
+}
+
+/* Style des titres avec l'icône rose */
+.AboutMe-section h2,
+.Hobbies-section h2 {
+    font-size: 20px;
+    color: #ece3e3;
+    margin-bottom: 100px;
+    gap: 8px;
+    line-height: 0;
+    text-align: start;
+}
+
+.bouton-parametre {
+    background: none;
+    border: none;
+    cursor: pointer;
+    outline: none;
+}
