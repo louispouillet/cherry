@@ -28,8 +28,8 @@ const Home_page = () => {
   return (
     <>
       <div>
-        <h1 className="title_home">cherry</h1>
         <div className="top_right_icons">
+          <h1 className="title_home">cherry</h1>
           <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon_plus">
             <path d="M5 12h14" />
             <path d="M12 5v14" />
