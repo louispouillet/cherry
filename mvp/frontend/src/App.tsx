@@ -7,6 +7,8 @@ import Home from './pages/Home/Home_page';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './App.css';
 
+    
+
 function App() {
 
   return (
@@ -16,8 +18,8 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/chat" element={<Chat />} />
-        <Route path="*" element={<NotFound />} />
         <Route path="/home-page" element={<Home />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   )
