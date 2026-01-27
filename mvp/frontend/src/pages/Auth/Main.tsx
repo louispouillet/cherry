@@ -1,11 +1,19 @@
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import "./Auth.css";
 
 const Main = () => {
     const navigate = useNavigate();
+    
+    useEffect(() => {
+        document.body.classList.add('bg');
+        return () => {
+            document.body.classList.remove('bg');
+        };
+    }, []);
+    
     return (
-        <body className="bg">
-            <div className="auth-bg">
+        <div className="auth-bg">
                 <div className="auth-card">
                     <div className="logo-container">
                         <img src="https://raw.githubusercontent.com/LoucheVDC/Assets/main/cherry.png" alt="logo" />
@@ -16,8 +24,7 @@ const Main = () => {
                         <button className="button" onClick={() => navigate("/register")}>Register</button>
                     </div>
                 </div>
-            </div>
-        </body>
+        </div>
     )
 }
 

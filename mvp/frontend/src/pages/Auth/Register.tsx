@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Auth.css";
@@ -18,6 +18,13 @@ const Register = () => {
     const [citie, setCitie] = useState("");
     const navigate = useNavigate();
     const phoneRegex = /^0[67]\d{8}$/;
+
+    useEffect(() => {
+        document.body.classList.add('bg');
+        return () => {
+            document.body.classList.remove('bg');
+        };
+    }, []);
 
 
 
@@ -64,9 +71,8 @@ const Register = () => {
         }
     }
     return (
-        <body className="bg">
-            < div className="auth-bg" >
-                <div className="auth-card">
+        <div className="auth-bg">
+            <div className="auth-card">
                     <div className="logo-container">
                         <img src="https://raw.githubusercontent.com/LoucheVDC/Assets/main/cherry.png" alt="logo" />
                     </div>
@@ -94,8 +100,7 @@ const Register = () => {
                         </form>
                     </div>
                 </div>
-            </div >
-        </body>
+        </div>
     )
 
 }
