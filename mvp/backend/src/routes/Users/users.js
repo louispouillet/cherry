@@ -2,7 +2,7 @@ const express = require('express');
 const auth = require('../../middelware/auth');
 const router = express.Router();
 const { getUserById, getUserByPhone, deleteUser } = require('./users.query');
-const auth = require("../../middelware/auth");
+
 // (account bouton) Route pour voir les informations d'un user
 router.get('/user', auth, async (req, res) => {
   const value = req.payload.id;
