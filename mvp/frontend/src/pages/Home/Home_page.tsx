@@ -17,6 +17,11 @@ const Home_page = () => {
   const totalImages = eventImages.length;
   let events = [];
   let events_city: any = [];
+  const mockEventPictures = [
+  "https://i.postimg.cc/hG3HmsBy/IMG-0390.jpg",
+  "https://i.postimg.cc/V63hqSQ3/Full-Size-Render.jpg",
+  "https://i.postimg.cc/3wKLV3QQ/IMG-6320.jpg"
+];
 
   async function event_loading() {
     // event.preventDefault();
@@ -36,6 +41,7 @@ const Home_page = () => {
       setEventPictures(events_city[0].photos);
       console.log(events_city);
       console.log(eventPictures);
+      console.log(mockEventPictures[0]);
 
     } catch (err: any) {
       console.error(err);
@@ -105,15 +111,11 @@ const Home_page = () => {
               </div>
             )}
           </div>
-
-
-          {eventPictures.length > 0 && (
             <img
               className="event_img"
-              src={eventPictures[currentImageIndex]}
+              src={mockEventPictures[currentImageIndex]}
               alt="Event in your area"
             />
-          )}
         </div>
       </div>
       <NavBar />

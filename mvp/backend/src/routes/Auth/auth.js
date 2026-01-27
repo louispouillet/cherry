@@ -30,7 +30,6 @@ router.post("/login", async (req, res) => {
     const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {
       expiresIn: "1d",
     });
-    console.log(payload);
     return res.status(201).json({ token: accessToken });
   } catch (err) {
     console.error("Erreur détaillée :", err);
@@ -67,7 +66,6 @@ router.post("/register", async (req, res) => {
     };
     const result = await conn.collection("Users").insertOne(newUser);
     const payload = { id: result.insertedId };
-    console.log(payload);
     const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {
       expiresIn: "1d",
     });
