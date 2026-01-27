@@ -8,6 +8,7 @@ import NavBar from "../../components/NavBar/NavBar";
 const Home_page = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [eventPictures, setEventPictures] = useState<string[]>([]);
+  const [showDetails, setShowDetails] = useState(false);
   const eventImages = [
     "https://i.postimg.cc/hG3HmsBy/IMG-0390.jpg",
     "https://i.postimg.cc/hG3HmsBy/IMG-0390.jpg",
@@ -70,7 +71,7 @@ const Home_page = () => {
           </div>
         </div>
         <div className="images_event" onClick={() => setCurrentImageIndex((prev) => prev === 2 ? 0 : prev + 1)
-}>
+        }>
           <div className="indice_image">
             {eventImages.map((_, index) => (
               <div
@@ -87,9 +88,22 @@ const Home_page = () => {
           <div className="event_info">
             <h2 className="event_title">Titre de soirée</h2>
             <p className="event_description">Voici des informations sur la soirée </p>
-            <div className="icon_details">
+            <div className="icon_details" onClick={(e) => { e.stopPropagation(); setShowDetails(!showDetails); }}>
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-move-up-icon lucide-move-up"><path d="M8 6L12 2L16 6" /><path d="M12 2V22" /></svg>
             </div>
+          </div>
+          <div>
+            {showDetails && (
+              <div className="event_details">
+                <div>
+                  <h3>Détails de l'événement</h3>
+                </div>
+                <p><strong>Lieu:</strong> 123 Rue de la Fête, Paris</p>
+                <p><strong>Heure:</strong> 20h00</p>
+                <p><strong>Participants:</strong> 25/50</p>
+                <p><strong>Prix:</strong> Gratuit</p>
+              </div>
+            )}
           </div>
 
 

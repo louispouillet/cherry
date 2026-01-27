@@ -109,6 +109,18 @@
     overflow-wrap: break-word;
 }
 
+.event_details {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.5);
+    color: white;
+    font-size: clamp(14px, 1.8vw, 20px);
+}
+
+.event_details p {
+    margin: 8px 0;
+}
+
 /* Voir si pas un probleme pour le scroll*/
 body{
     overflow: hidden;
