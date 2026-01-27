@@ -1,0 +1,81 @@
+Pitch 
+
+1. Le problème
+
+Nous vivons un paradoxe moderne : nous sommes plus connectés que jamais numériquement, mais de plus en plus isolés physiquement. Aujourd'hui, de nombreuses personnes souhaitent sortir mais finissent par rester chez elles faute de partenaires pour les accompagner. Les réseaux sociaux actuels ont échoué à créer du lien réel, car ils privilégient la consommation infini des contenu en ligne (le "scroll") au détriment des interactions humaines spontanées.
+
+Une isolation qui touche tout le monde et impacte toutes les générations malheureusement.
+
+De plus ce manque d'interactions a des conséquences graves sur:
+
+- Notre santé Mentale : Augmentation de l'anxiété sociale et sentiment de solitude chronique.
+- La sédentarité : Un mode de vie limité aux écrans, réduisant les opportunités de mouvement et de découvertes locales.
+- le déclin Social : Les communautés de quartier s'affaiblissent et les générations ne se mélangent plus.
+
+Il manque aujourd'hui un outil qui ne cherche pas à nous retenir sur notre téléphone, mais qui sert de moteur pour nous en extraire. Notre défi a donc était de recréer un lien social spontané et sécurisant pour combattre l'isolement de tous.
+
+
+2. Les utilisateurs ciblés
+
+Notre application s'adresse à quatre types de profils, unis par un besoin commun : recréer du lien social réel.
+
+- "Young Social Explorer" (18-35 ans) : Très présent sur les réseaux, il se sent pourtant seul. Il cherche à transformer ses interactions numériques en rencontres réelles pour élargir son cercle d'amis.
+
+- "New City Newcomer" (18-50 ans) : Nouveau venu en ville (travail/études), il n'a aucun réseau local. Son besoin est critique : s'intégrer rapidement et trouver des personnes de confiance.
+
+- "Busy Social Planner" (36-65 ans) : Entre travail et famille, il a besoin de trouver des activités structurées et fiables pour socialiser.
+
+- "Active Retiree" (66+ ans) : Il dispose de beaucoup de temps libre mais craint la solitude. Il cherche des activités simples, pour rester actif et engagé dans la société.
+
+
+3. Le concept 
+
+L’idée centrale est de proposer une "Vitrine Sociale Bienveillante". Notre concept repose sur trois piliers :
+
+- La Priorité aux Centres d'Intérêt
+Le profil n'est pas qu'une simple photo ; il est construit autour des Hobbies, L'objectif est de faciliter le "premier pas" en permettant aux utilisateurs d'identifier instantanément des points communs, réduisant ainsi l'anxiété liée à la rencontre de nouvelles personnes.
+
+- Une interface accessible à tous
+Pour répondre aux besoins de nos personas (notamment les retraités et les actifs pressés), le concept utilise un design "Full-Card". Cela permet une lecture rapide, sans distraction ou de fonction secondaire inutile.
+
+- Objectif : Sortir!
+Le concept fait le pont entre le monde numérique et le monde réel. L'application ne cherche pas à retenir l'utilisateur en ligne, mais à lui servir de tremplin pour : découvrir des profils authentiques, initier une discussion sur une base commune, planifier une rencontre dans un environnement sécurisant.
+
+
+4. Le parcours UX
+
+L'expérience utilisateur a été pensée pour être aussi intuitive qu'une application de rencontre, mais appliquée aux événements sociaux. Le parcours se décline en trois piliers :
+
+- Une entrée simplifiée
+
+Dès l'ouverture, l'utilisateur est guidé à travers un processus d'authentification simple et claire. La création du profil est l'étape clé : l'utilisateur définit son identité visuelle et ses centres d'intérêt.
+
+- Découverte par le "Swipe"
+
+Sur la page principale (accessible via l'icône cerise), l'utilisateur explore les événements autour de lui de manière ludique.
+
+. Swipe à droite pour demander à participer.
+. Swipe à gauche pour passer à l'événement suivant. Cette gestuelle familière rend la recherche d'activités rapide, fluide et agréable, même pour les utilisateurs pressés.
+
+- Organisation et immersion
+
+Pour ceux qui veulent prendre l'initiative, la création d'événement est directe (bouton "+" en haut à droite). L'utilisateur peut définir des critères précis : type d'activité, tranche d'âge. Côté consultation, un clic sur la flèche de détail permet d'accéder à toutes les informations (description, date, age minimum, participants) pour rassurer l'utilisateur avant qu'il ne s'engage.
+
+
+5. La portée du MVP
+
+Pour cette première version, nous avons sélectionné les fonctionnalités critiques qui permettent de valider le parcours utilisateur, de l'inscription à la rencontre sociale.
+
+- Système d'Authentification : Création de compte et connexion sécurisée
+
+- Navigation par Swipe : Un flux dynamique d'événements où l'utilisateur accepte (swipe droite) ou refuse (swipe gauche) les propositions de manière intuitive.
+
+- Création d'Événements : Formulaire complet permettant de définir le nom, le type d'activité, la description, l'âge requis et les dates.
+
+- Messagerie Instantanée : Système de chat groupé pour chaque événement afin de permettre aux participants de s'organiser en temps réel.
+
+- Filtrage & Localisation : Recherche par type d'activité (Sport, Sorties, Jeux) et suggestion d'événements basée sur la ville saisie par l'utilisateur.
+
+
+
+Finalement, Cheery utilise le numérique pour réparer nos liens social, c'est l'outil idéal pour briser les barrières de l'isolement, élargir son cercle d'amis pour partager de vrais bons moments!
