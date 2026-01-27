@@ -1,4 +1,4 @@
-.title_home{
+.title_home {
     font-size: clamp(35px, 5vw, 68px);
     font-weight: bold;
     margin: 0;
@@ -67,7 +67,7 @@
     background-color: rgba(255, 255, 255, 1);
 }
 
-.event_date{
+.event_date {
     background-color: rgba(255, 255, 255, 0.199);
     position: absolute;
     top: 20px;
@@ -77,7 +77,7 @@
     border-radius: 10px;
 }
 
-.event_info{
+.event_info {
     position: absolute;
     bottom: 20px;
     left: 50%;
@@ -91,7 +91,7 @@
     text-align: center;
 }
 
-.event_title{
+.event_title {
     margin: 0 0 8px 0;
     font-size: clamp(24px, 3vw, 38px);
     line-height: 1.2;
@@ -100,7 +100,7 @@
     overflow-wrap: break-word;
 }
 
-.event_description{
+.event_description {
     margin: 0;
     font-size: clamp(16px, 2vw, 24px);
     line-height: 1.4;
@@ -121,7 +121,7 @@
 }
 
 /* Voir si pas un probleme pour le scroll*/
-body{
+body {
     overflow: hidden;
 }
 
@@ -154,7 +154,7 @@ body{
     gap: 8px;
 }
 
-.detail_header{
+.detail_header {
     display: flex;
     flex-direction: row;
     gap: 10px;
@@ -189,4 +189,44 @@ body{
     width: clamp(30px, 4vw, 68px);
     height: clamp(30px, 4vw, 68px);
     stroke-width: 2.6;
+}
+
+/* .logo_home {
+    width: clamp(40px, 5vw, 80px);
+    height: clamp(40px, 5vw, 80px);
+    color: black;
+    position: absolute;
+} */
+
+.logo_home {
+    margin-top: 15vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+@keyframes turn {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+
+.logo_home h3 {
+    margin: 0;
+    font-size: clamp(15px, 3vw, 30px);
+    text-align: center;
+    color: black
+}
+
+.logo_home img {
+    margin: 0;
+    width: clamp(200px, 3vw, 300px);
+    height: auto;
 }
