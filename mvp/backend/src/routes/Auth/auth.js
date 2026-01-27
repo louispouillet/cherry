@@ -39,8 +39,9 @@ router.post("/login", async (req, res) => {
 });
 
 router.post("/register", async (req, res) => {
-  const { phone, password, birthdate, firstname, lastname, description, hobbies, picture, city } = req.body;
+  const { phone, password, birthdate, firstname, lastname, description, hobbies, pictures, city } = req.body;
   const conn = await db();
+  const group = []
   if (!phone || !password || !birthdate || !firstname || !lastname) {
     return res.status(400).json({ msg: "Bad parameter" });
   }
@@ -60,9 +61,9 @@ router.post("/register", async (req, res) => {
       lastname,
       description,
       hobbies,
-      picture,
+      pictures,
       city,
-      groups,
+      groups : group
     };
     const result = await conn.collection("Users").insertOne(newUser);
     const payload = { id: result.insertedId };
