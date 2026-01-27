@@ -39,7 +39,7 @@ router.post("/login", async (req, res) => {
 });
 
 router.post("/register", async (req, res) => {
-  const { phone, password, birthdate, firstname, lastname, description, hobbies, pictures, city } = req.body;
+  const { phone, password, birthdate, firstname, lastname, description, hobbies, picture, city } = req.body;
   const conn = await db();
   const group = []
   if (!phone || !password || !birthdate || !firstname || !lastname) {
@@ -61,7 +61,7 @@ router.post("/register", async (req, res) => {
       lastname,
       description,
       hobbies,
-      pictures,
+      picture,
       city,
       groups : group
     };
