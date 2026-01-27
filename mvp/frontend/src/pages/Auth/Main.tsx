@@ -5,13 +5,6 @@ import "./Auth.css";
 const Main = () => {
     const navigate = useNavigate();
     
-    useEffect(() => {
-        document.body.classList.add('bg');
-        return () => {
-            document.body.classList.remove('bg');
-        };
-    }, []);
-    
     return (
         <div className="auth-bg">
                 <div className="auth-card">

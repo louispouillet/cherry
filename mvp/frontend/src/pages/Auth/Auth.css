@@ -1,27 +1,20 @@
 .bg {
-    background-color: white;
-    width: 100%;
-    height: 100vh;
-    height: 100dvh;
-    overflow: hidden;
-    background-image: url('https://i.postimg.cc/MG6Fz8z4/background-temp.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
+  background-color: white;
+  width: 100%;
+  height: 100dvh;
 }
 
 h1 {
-    color: black;
-    font-size: 4vh;
-    margin-top: 2vh;
-    margin-bottom: 3vh;
+  color: black;
+  font-size: 4vh;
+  margin-top: 2vh;
+  margin-bottom: 3vh;
 }
 
 .logo-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 5vh;
+  display: flex;
+  justify-content: center;
+  margin-top: 5vh;
 }
 
 .logo-container img {
@@ -30,99 +23,83 @@ h1 {
   height: auto;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-.form {
-    color: black;
-}
 
 .container {
-    display: flex;
-    justify-content: center;
-    padding: 0 2vh;
+  display: flex;
+  justify-content: center;
+  padding: 0 2vh;
 }
 
 .container.vertical {
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
 }
 
 .container.vertical .button {
-    width: 100%;
-    max-width: 300px;
+  width: 100%;
+  max-width: 300px;
 }
 
 .container form {
-    width: 100%;
-    max-width: 400px;
+  width: 100%;
+  max-width: 400px;
 }
 
 .input {
-    border-radius: 5px;
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
-    font-size: 16px;
-    font-family: inherit;
+  border-radius: 5px;
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  font-size: 16px;
+  font-family: inherit;
 }
 
 textarea.input {
-    min-height: 80px;
-    resize: vertical;
-}
-
-select.input {
-    appearance: auto;
+  min-height: 80px;
+  resize: vertical;
 }
 
 .button {
-    width: 100%;
-    padding: 12px;
-    border-radius: 5px;
-    margin-top: 10px;
+  width: 100%;
+  padding: 12px;
+  border-radius: 5px;
+  margin-top: 10px;
 }
 
 .auth-bg {
-    min-height: 100vh;
-    min-height: 100dvh;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  min-height: 100vh;
+  min-height: 100dvh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background-image: url("https://i.postimg.cc/MG6Fz8z4/background-temp.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 .auth-card {
-    width: 100%;
-    max-width: 420px;
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(4px);
-    border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-    padding: 24px 20px;
+  width: 100%;
+  max-width: 420px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(4px);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  padding: 24px 20px;
 }
 
 .auth-card h1 {
-    margin-top: 12px;
-    margin-bottom: 20px;
-    text-align: center;
+  margin-top: 12px;
+  margin-bottom: 20px;
+  text-align: center;
 }
 
 .auth-card .logo-container {
-    margin-top: 0;
+  margin-top: 0;
 }

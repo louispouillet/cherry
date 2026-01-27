@@ -3,11 +3,12 @@ import "./Chat.css";
 import NavBar from "../../components/NavBar/NavBar";
 import CreateEvent from "../../components/CreateEvent/CreateEvent";
 import SearchBar from "../../components/SearchBar/SearchBar";
-import { useEffect, useState } from "react";
+import { useEffect, useState,  } from "react";
 import { differenceInSeconds, differenceInMinutes, differenceInHours, differenceInDays, differenceInMonths, differenceInYears } from 'date-fns';
-
+import { useNavigate } from "react-router-dom";
 
 const Chat = () => {
+  const navigate = useNavigate();
   const [event, setEvent] = useState<any[]>([]);
   async function handleSearch() {
     try {
@@ -21,8 +22,8 @@ const Chat = () => {
         const response = await axios.get(`http://localhost:3000/events/${id}`, {
           headers: {'Authorization': `Bearer ${token}`},
         });
-        console.log(response.data.lastMessage)
         return {
+          id: response.data._id,
           title: response.data.title,
           photo: response.data.photos[0],
           content: response.data.lastMessage.content,
@@ -55,8 +56,8 @@ const Chat = () => {
       </div>
       <div className="messageContainer">
         {
-          event.map((event: any, index: number) => (
-            <div className="messageBlock" key={index}>
+          event.map((event: any) => (
+            <div className="messageBlock" key={event.id} onClick={() => navigate(`/message/${event.id}`)}>
               <img className="eventPicture" src={event.photo} alt="Event photo" />
               <div className="eventDetails">
                 <div className="eventHeader">

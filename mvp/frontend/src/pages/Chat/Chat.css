@@ -1,6 +1,6 @@
 #root {
-  min-height: 100vh !important;
-  overflow: auto !important;
+  min-height: 100vh ;
+  overflow: auto ;
 }
 
 .header {

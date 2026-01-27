@@ -6,13 +6,13 @@ const Profile = () => {
     const [userData, setUserData] = useState<{
         firstname: string;
         aboutMe: string;
-        pictures: string;
+        picture: string;
         hobbies: string
         age: number;
     }>({
 
         firstname: "",
-        pictures: "",
+        picture: "",
         aboutMe: "",
         hobbies: "",
         age: 0,
@@ -52,7 +52,7 @@ const Profile = () => {
 
                 setUserData({
                     firstname: data.firstname || "",
-                    pictures: data.pictures || "",
+                    picture: data.picture || "",
                     aboutMe: data.description || "",
                     hobbies: data.hobbies || "",
                     age: age || 0,
@@ -76,8 +76,8 @@ const Profile = () => {
 
             <div className="image-section">
                 {/* <img src={"https://i.postimg.cc/9QyY95RC/image.png"} alt="Profile" className="profile-picture" /> */}
-                {userData.pictures ? (
-                    <img src={userData.pictures} alt="Profile" className="profile-picture" />
+                {userData.picture ? (
+                    <img src={userData.picture} alt="Profile" className="profile-picture" />
                 ) : (
                     <p>No profile picture available.</p>
                 )}
