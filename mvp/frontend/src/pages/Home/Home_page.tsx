@@ -16,6 +16,11 @@ const Home_page = () => {
   const totalImages = eventImages.length;
   let events = [];
   let events_city: any = [];
+  const mockEventPictures = [
+  "https://i.postimg.cc/hG3HmsBy/IMG-0390.jpg",
+  "https://i.postimg.cc/V63hqSQ3/Full-Size-Render.jpg",
+  "https://i.postimg.cc/3wKLV3QQ/IMG-6320.jpg"
+];
 
   async function event_loading() {
     // event.preventDefault();
@@ -35,6 +40,7 @@ const Home_page = () => {
       setEventPictures(events_city[0].photos);
       console.log(events_city);
       console.log(eventPictures);
+      console.log(mockEventPictures[0]);
 
     } catch (err: any) {
       console.error(err);
@@ -91,15 +97,11 @@ const Home_page = () => {
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-move-up-icon lucide-move-up"><path d="M8 6L12 2L16 6" /><path d="M12 2V22" /></svg>
             </div>
           </div>
-
-
-          {eventPictures.length > 0 && (
             <img
               className="event_img"
-              src={eventPictures[currentImageIndex]}
+              src={mockEventPictures[currentImageIndex]}
               alt="Event in your area"
             />
-          )}
         </div>
       </div>
       <NavBar />
