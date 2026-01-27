@@ -38,7 +38,6 @@ const Profile = () => {
                 }
 
                 const data = await response.json();
-
                 const birth = new Date(data.birthdate);
                 if (Number.isNaN(birth.getTime())) {
                     window.alert("Invalid birthdate.");
@@ -53,7 +52,7 @@ const Profile = () => {
 
                 setUserData({
                     firstname: data.firstname || "",
-                    pictures: data.picture || "",
+                    pictures: data.pictures || "",
                     aboutMe: data.description || "",
                     hobbies: data.hobbies || "",
                     age: age || 0,

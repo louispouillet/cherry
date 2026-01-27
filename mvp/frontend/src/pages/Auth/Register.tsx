@@ -42,6 +42,7 @@ const Register = () => {
             window.alert("Invalid birthdate.");
             return;
         }
+
         const today = new Date();
         let age = today.getFullYear() - birth.getFullYear();
         const m = today.getMonth() - birth.getMonth();
@@ -56,6 +57,7 @@ const Register = () => {
             window.alert("Incoherent age (over 110 years old).");
             return;
         }
+
         try {
             const response = await axios.post(`http://localhost:3000/register`, { phone: phone_string, password, birthdate, firstname, lastname, description, hobbies, pictures, city });
             localStorage.setItem("token", response.data.token);
@@ -70,6 +72,7 @@ const Register = () => {
             }
         }
     }
+
     return (
         <div className="auth-bg">
             <div className="auth-card">
@@ -87,13 +90,7 @@ const Register = () => {
                             <input id="birthdate" type="date" placeholder="Birthdate" className="input" onChange={(e) => setBirthdate(e.target.value)} required /><br></br>
                             <textarea id="description" placeholder="Description" className="input" onChange={(e) => setDescription(e.target.value)} required /><br></br>
                             <input id="city" placeholder="City" className="input" onChange={(e) => setCity(e.target.value)} required /><br></br>
-                            <select id="hobbies" className="input" onChange={(e) => setHobbies(e.target.value)} defaultValue="" required>
-                                <option value="" disabled>Choose a hobby</option>
-                                <option value="culture">Culture</option>
-                                <option value="soiree">Party</option>
-                                <option value="sport">Sport</option>
-                                <option value="fun">Fun</option>
-                            </select><br></br>
+                            <input id="hobbies" type="text" placeholder="Hobbies" className="input" onChange={(e) => setHobbies(e.target.value)} required /><br></br>
                             <input id="pictures" type="text" placeholder="Photos URL (optional)" className="input" onChange={(e) => setPictures(e.target.value)} /><br></br>
                             <button type="submit" className="button" >Register</button>
                             <p style={{ color: "black" }}> Already registered ? <a href="/login"> Login here</a> </p>

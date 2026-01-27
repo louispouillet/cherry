@@ -1,9 +1,7 @@
 #root {
-  max-width: none !important;
-  margin: 0 !important;
-  padding: 0 !important;
+  min-height: 100vh !important;
+  overflow: auto !important;
 }
-
 
 .header {
   display: flex;
@@ -26,10 +24,10 @@
 }
 
 .messageContainer {
-  max-width: 1500px;
   display: flex;
   flex-direction: column;
-  padding: 5vh 5vw;
+  /* give extra bottom padding so last items are not hidden behind the fixed NavBar */
+  padding: 5vh 5vw 12vh;
   gap: 3vh;
   color: #333;
 }
@@ -61,9 +59,9 @@
 
 .eventText {
   display: flex;
-  gap: 5px;
   align-items: center;
   flex-wrap: nowrap;
+  gap: 5px;
 }
 
 .eventSendAgo {
@@ -78,7 +76,6 @@
   display: flex;
   gap: 10px;
   align-items: center;
-  width: 100%;
 }
 
 .eventTitle {
@@ -95,7 +92,6 @@
 
 .eventSenderName {
   flex: 0 0 auto;
-  margin-right: 6px;
   white-space: nowrap;
 }
 
@@ -105,4 +101,3 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
