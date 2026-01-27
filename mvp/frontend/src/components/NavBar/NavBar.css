@@ -11,8 +11,7 @@
   padding: 6px 10px;
   padding-bottom: calc(env(safe-area-inset-bottom) + 8px);
   box-sizing: border-box;
-  background-color: rgba(250, 240, 230, 0.95);
-  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  background-color: #faebd7;
   backdrop-filter: blur(6px);
 }
 

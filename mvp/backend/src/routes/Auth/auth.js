@@ -30,7 +30,6 @@ router.post("/login", async (req, res) => {
     const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {
       expiresIn: "1d",
     });
-    console.log(payload);
     return res.status(201).json({ token: accessToken });
   } catch (err) {
     console.error("Erreur détaillée :", err);
@@ -41,6 +40,7 @@ router.post("/login", async (req, res) => {
 router.post("/register", async (req, res) => {
   const { phone, password, birthdate, firstname, lastname, description, hobbies, picture, city } = req.body;
   const conn = await db();
+  const group = []
   if (!phone || !password || !birthdate || !firstname || !lastname) {
     return res.status(400).json({ msg: "Bad parameter" });
   }
@@ -62,11 +62,10 @@ router.post("/register", async (req, res) => {
       hobbies,
       picture,
       city,
-      groups,
+      groups : group
     };
     const result = await conn.collection("Users").insertOne(newUser);
     const payload = { id: result.insertedId };
-    console.log(payload);
     const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {
       expiresIn: "1d",
     });

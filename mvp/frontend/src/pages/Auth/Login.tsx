@@ -9,13 +9,6 @@ const Login = () => {
     const navigate = useNavigate();
     const phoneRegex = /^0[67]\d{8}$/;
 
-    useEffect(() => {
-        document.body.classList.add('bg');
-        return () => {
-            document.body.classList.remove('bg');
-        };
-    }, []);
-
     async function handleSubmit(event: any) {
         event.preventDefault();
         const phone_string = phone.replace(/\s/g, ''); // Pour enlever tous les espaces en trop
