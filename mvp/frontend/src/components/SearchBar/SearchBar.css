@@ -1,6 +1,6 @@
 .search-container {
     display: flex;
-    align-items: end;
+    align-items: center;
     width: 100%;
     transition: all 0.3s ease;
 }
@@ -8,6 +8,7 @@
 .searchBar {
     width: 100%;
     height: 5vh;
+    font-size: 3vh !important;
     padding: 10px 15px;
     font-size: 20px;
     background-color: #ddd9d9;
@@ -18,8 +19,13 @@
     outline: none;
 }
 
+.test {
+    display: flex;
+    align-items: center;
+}
+
 .arrow {
-    height: 30px;
+    height: 4vh;
     animation: fadeIn 0.2s;
     color: #333;
 }
