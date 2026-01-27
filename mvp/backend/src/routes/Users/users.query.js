@@ -14,6 +14,8 @@ async function getUserById(id) {
     }
 };
 
+
+
 async function getAllUsers() {
     try {
         const conn = await db();

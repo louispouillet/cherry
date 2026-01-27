@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const auth = require ("../../middelware/auth");
-const { AddUserToGroup , QuitTheGroup } =  require("./group.query");
+const { AddUserToGroup , QuitTheGroup, GetUsersGroups } =  require("./group.query");
 
 router.post('/add_user',  auth , async (req, res) => {
   try {
@@ -32,13 +32,12 @@ router.delete("/quit_group", auth , async (req , res) => {
 
 router.get("/get_all_groups", /* auth , */ async (req, res) => {
     try {
-        /* 
-        const user_id = payload.id;
-        */
-        const result = await GetAllGroups(user_id);
+        /*const user_id = req.payload.id;*/
+        const user_id = "6967b76685ce30c43fdfd605";
+        const result = await GetUsersGroups(user_id);
         res.json(result);
     }catch (err) {
-        res.status(500),json({ message : "Cannot get all the groups"});
+        res.status(500).json({ message : "Cannot get all the groups"});
     }
 })
 

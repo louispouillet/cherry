@@ -18,12 +18,14 @@ app.use(cors());
 const auth = require('./routes/Auth/auth.js');
 const user = require('./routes/Users/users.js');
 const groupe = require('./routes/Group/group.js');
+const message = require('./routes/Message/message.js');
 const event = require('./routes/Event/event.js');
 const middnot = require('./middelware/NotFound.js');
 
 app.use(express.json());
 app.use('/', auth);
 app.use('/', groupe);
+app.use('/', message);
 app.use('/', event);
 app.use('/', user);
 //app.use(middnot);

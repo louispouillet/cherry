@@ -1,11 +1,11 @@
 const express = require('express');
+const auth = require('../../middelware/auth');
 const router = express.Router();
 const { getUserById, getUserByPhone, deleteUser } = require('./users.query');
 
 // (account bouton) Route pour voir les informations d'un user
-router.get('/user/:value', /*auth,*/async (req, res) => {
-  const value = req.params.value;
-
+router.get('/user', auth, async (req, res) => {
+  const value = req.payload.id;
   try {
     let user;
 

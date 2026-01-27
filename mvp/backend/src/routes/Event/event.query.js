@@ -10,7 +10,6 @@ async function getEventById(eventId) {
         console.error('Mongo query error getEventById:', error);
         throw error;
     }
-
 }
 
 async function getEventsAll() {

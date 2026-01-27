@@ -22,5 +22,16 @@ async function QuitTheGroup(user_id, event_id) {
         }
 }
 
+async function GetUsersGroups(user_id) {
+  try {
+      const db = await connectDB()
+      const groups = await db.collection('Groups').find().toArray();
+      return groups;
+  } catch (err) {
+      console.error(err)
+      throw err
+  }
+}
 
-module.exports =  {AddUserToGroup , QuitTheGroup};
+
+module.exports =  {AddUserToGroup , QuitTheGroup, GetUsersGroups};
