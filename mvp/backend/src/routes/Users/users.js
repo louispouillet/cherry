@@ -2,7 +2,7 @@ const express = require('express');
 const auth = require('../../middelware/auth');
 const router = express.Router();
 const { getUserById, getUserByPhone, deleteUser } = require('./users.query');
-
+const auth = require("../../middelware/auth");
 // (account bouton) Route pour voir les informations d'un user
 router.get('/user', auth, async (req, res) => {
   const value = req.payload.id;
@@ -41,5 +41,26 @@ router.delete('/user/:id', /*auth,*/ async (req, res) => {
     res.status(500).json({ msg: "Internal server error" });
   }
 });
+
+// Route pour recuperer les informations du user en fonction du token 
+router.get('/user', auth, async (req, res) => {
+  const value = req.payload.id;
+
+  try {
+    let user;
+
+      user = await getUserById(value);
+
+    if (!user || user.length === 0)
+      return res.status(404).json({ msg: "Not found" });
+
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ msg: "Internal server error" });
+  }
+});
+
+
+
 
 module.exports = router;

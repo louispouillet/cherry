@@ -1,14 +1,97 @@
-.profile-picture{
-    width: 150px;
-    height: 150px;
-    border-radius: 50%; /* image en forme de cercle */
-    object-fit: cover; /* image remplisse le conteneur */
+
+.profile-page {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 0 16px 80px;
+    position: relative;
+    color: black;
+    background-color: #f5f5dc;
 }
 
-.profile-container {
+.profile-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+
+}
+
+.image-section {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 20px;
-    background-color: #0c0c0c;
-} 
+    width: 100%;
+    object-fit: cover;
+    
+}
+
+.profile-picture {
+    margin-bottom: 20px;
+    width: 350px;
+    border-radius: 40px;
+    /* image en forme de cercle */
+
+    /* image remplisse le conteneur */
+    box-shadow: none;
+
+
+}
+
+/* Style des sections About Me et Hobbies */
+.AboutMe-container {
+    background: rgb(252, 206, 206);
+    padding: 15px;
+    border-radius: 40px;
+    box-shadow: rgb(127, 120, 120) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    font-size: 15px;
+    color: #050505;
+    line-height: 1;
+    margin-top: auto;
+}
+
+.Hobbies-container {
+    background: rgb(252, 206, 206);
+    padding: 15px;
+    border-radius: 40px;
+    box-shadow: rgb(127, 120, 120) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    font-size: 15px;
+    line-height: 1;
+}
+
+.top-right-icons {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: row; 
+    gap: 15px;
+    z-index: 10;
+    
+
+    
+}
+.icon-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    top: 20px;
+    right: 20px;
+    
+}
+
+.title-with-icon {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+}

@@ -2,10 +2,10 @@ const express = require('express');
 const router = express.Router();
 const eventQuery = require('../Event/event.query');
 const { getEventById, getEventsAll, getUsersEvent, CreateEvent, updateEvent, deleteEvent} = require('../Event/event.query');
-
+const auth = require ("../../middelware/auth");
 
 // affiche les listes des events (page d'accueil des events)
-router.get('/events', async (req, res) => {
+router.get('/events', auth ,async (req, res) => {
     try {
         const events = await getEventsAll() // récupère tous les events de la db
         res.status(200).json(events)

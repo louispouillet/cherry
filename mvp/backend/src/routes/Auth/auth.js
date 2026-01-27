@@ -28,7 +28,7 @@ router.post("/login", async (req, res) => {
     }
     const payload = { id: result._id };
     const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {
-      expiresIn: "1h",
+      expiresIn: "1d",
     });
     console.log(payload);
     return res.status(201).json({ token: accessToken });
@@ -67,7 +67,7 @@ router.post("/register", async (req, res) => {
     const payload = { id: result.insertedId };
     console.log(payload);
     const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {
-      expiresIn: "1h",
+      expiresIn: "1d",
     });
     return res.status(201).json({ token: accessToken });
   } catch (err) {
