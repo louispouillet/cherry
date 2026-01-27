@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Auth.css";
@@ -15,9 +15,16 @@ const Register = () => {
     const [hobbies, setHobbies] = useState("");
     const [pictures, setPictures] = useState("");
     const [error, setError] = useState("");
-    const [citie, setCitie] = useState("");
+    const [city, setCity] = useState("");
     const navigate = useNavigate();
     const phoneRegex = /^0[67]\d{8}$/;
+
+    useEffect(() => {
+        document.body.classList.add('bg');
+        return () => {
+            document.body.classList.remove('bg');
+        };
+    }, []);
 
 
 
@@ -35,6 +42,7 @@ const Register = () => {
             window.alert("Invalid birthdate.");
             return;
         }
+
         const today = new Date();
         let age = today.getFullYear() - birth.getFullYear();
         const m = today.getMonth() - birth.getMonth();
@@ -49,8 +57,9 @@ const Register = () => {
             window.alert("Incoherent age (over 110 years old).");
             return;
         }
+
         try {
-            const response = await axios.post(`http://localhost:3000/register`, { phone: phone_string, password, birthdate, firstname, lastname, description, hobbies, pictures, citie });
+            const response = await axios.post(`http://localhost:3000/register`, { phone: phone_string, password, birthdate, firstname, lastname, description, hobbies, pictures, city });
             localStorage.setItem("token", response.data.token);
             navigate("/home");
         } catch (err: any) {
@@ -63,10 +72,10 @@ const Register = () => {
             }
         }
     }
+
     return (
-        <body className="bg">
-            < div className="auth-bg" >
-                <div className="auth-card">
+        <div className="auth-bg">
+            <div className="auth-card">
                     <div className="logo-container">
                         <img src="https://raw.githubusercontent.com/LoucheVDC/Assets/main/cherry.png" alt="logo" />
                     </div>
@@ -80,22 +89,15 @@ const Register = () => {
                             <input id="password" type="password" placeholder="Password" className="input" onChange={(e) => setPassword(e.target.value)} required /><br></br>
                             <input id="birthdate" type="date" placeholder="Birthdate" className="input" onChange={(e) => setBirthdate(e.target.value)} required /><br></br>
                             <textarea id="description" placeholder="Description" className="input" onChange={(e) => setDescription(e.target.value)} required /><br></br>
-                            <input id="citie" placeholder="Citie" className="input" onChange={(e) => setCitie(e.target.value)} required /><br></br>
-                            <select id="hobbies" className="input" onChange={(e) => setHobbies(e.target.value)} defaultValue="" required>
-                                <option value="" disabled>Choose a hobby</option>
-                                <option value="culture">Culture</option>
-                                <option value="soiree">Party</option>
-                                <option value="sport">Sport</option>
-                                <option value="fun">Fun</option>
-                            </select><br></br>
+                            <input id="city" placeholder="City" className="input" onChange={(e) => setCity(e.target.value)} required /><br></br>
+                            <input id="hobbies" type="text" placeholder="Hobbies" className="input" onChange={(e) => setHobbies(e.target.value)} required /><br></br>
                             <input id="pictures" type="text" placeholder="Photos URL (optional)" className="input" onChange={(e) => setPictures(e.target.value)} /><br></br>
                             <button type="submit" className="button" >Register</button>
                             <p style={{ color: "black" }}> Already registered ? <a href="/login"> Login here</a> </p>
                         </form>
                     </div>
                 </div>
-            </div >
-        </body>
+        </div>
     )
 
 }

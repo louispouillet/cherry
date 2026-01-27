@@ -5,12 +5,15 @@
   right: 0;
   z-index: 100;
   display: flex;
-  /*background-color: #faf0e6;*/
   justify-content: space-around;
   align-items: center;
   height: 8vh;
-  padding: 0 10px;
+  padding: 6px 10px;
+  padding-bottom: calc(env(safe-area-inset-bottom) + 8px);
   box-sizing: border-box;
+  background-color: rgba(250, 240, 230, 0.95);
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  backdrop-filter: blur(6px);
 }
 
 .nav-logo {

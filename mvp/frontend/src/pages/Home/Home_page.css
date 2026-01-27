@@ -88,6 +88,7 @@
     width: 85%;
     max-width: 600px;
     box-sizing: border-box;
+    text-align: center;
 }
 
 .event_title{

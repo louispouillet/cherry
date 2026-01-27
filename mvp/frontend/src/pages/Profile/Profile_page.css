@@ -34,9 +34,9 @@
 }
 
 .profile-picture {
-    margin-bottom: 20px;
-    width: 350px;
-    border-radius: 40px;
+    margin-bottom: 10px;
+    width: 390px;
+    border-radius: 30px;
     /* image en forme de cercle */
 
     /* image remplisse le conteneur */
@@ -47,9 +47,9 @@
 
 /* Style des sections About Me et Hobbies */
 .AboutMe-container {
-    background: rgb(252, 206, 206);
+    background: rgb(252, 222, 222);
     padding: 15px;
-    border-radius: 40px;
+    border-radius: 30px;
     box-shadow: rgb(127, 120, 120) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
     display: flex;
     flex-direction: column;
@@ -67,9 +67,9 @@
 }
 
 .Hobbies-container {
-    background: rgb(252, 206, 206);
+    background: rgb(252, 222, 222);
     padding: 15px;
-    border-radius: 40px;
+    border-radius: 30px;
     box-shadow: rgb(127, 120, 120) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
     display: flex;
     flex-direction: column;
