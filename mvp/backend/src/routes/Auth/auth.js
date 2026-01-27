@@ -62,6 +62,7 @@ router.post("/register", async (req, res) => {
       hobbies,
       picture,
       city,
+      groups,
     };
     const result = await conn.collection("Users").insertOne(newUser);
     const payload = { id: result.insertedId };
