@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Home_page.css";
@@ -7,6 +7,7 @@ import NavBar from "../../components/NavBar/NavBar";
 
 const Home_page = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [eventPictures, setEventPictures] = useState<string[]>([]);
   const eventImages = [
     "https://i.postimg.cc/hG3HmsBy/IMG-0390.jpg",
     "https://i.postimg.cc/hG3HmsBy/IMG-0390.jpg",
@@ -16,7 +17,7 @@ const Home_page = () => {
   let events = [];
   let events_city: any = [];
 
-  async function event_loading(event: any) {
+  async function event_loading() {
     // event.preventDefault();
     /* const token = localStorage.getItem("token");*/
     const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzcyNTJlOWQyZWFkNmVlZTU2Y2VlZiIsImlhdCI6MTc2OTQzNzkzMSwiZXhwIjoxNzY5NTI0MzMxfQ.hycc63cnxY0KeUzSb68wXOqXQQN9uOBoI4HT3D_5Kxc";
@@ -31,15 +32,19 @@ const Home_page = () => {
         }
       });
       // utilier events_city pour avoir tous les events de la ville du user
+      setEventPictures(events_city[0].photos);
       console.log(events_city);
+      console.log(eventPictures);
 
     } catch (err: any) {
       console.error(err);
 
     }
-    return;
+    return (eventPictures);
   }
-  event_loading(event);
+  useEffect(() => {
+    event_loading();
+  }, []);
 
   return (
     <>
@@ -64,7 +69,8 @@ const Home_page = () => {
             </svg>
           </div>
         </div>
-        <div className="images_event">
+        <div className="images_event" onClick={() => setCurrentImageIndex((prev) => prev === 2 ? 0 : prev + 1)
+}>
           <div className="indice_image">
             {eventImages.map((_, index) => (
               <div
@@ -81,12 +87,19 @@ const Home_page = () => {
           <div className="event_info">
             <h2 className="event_title">Titre de soirée</h2>
             <p className="event_description">Voici des informations sur la soirée </p>
+            <div className="icon_details">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-move-up-icon lucide-move-up"><path d="M8 6L12 2L16 6" /><path d="M12 2V22" /></svg>
+            </div>
           </div>
-          <img
-            className="event_img"
-            src="https://i.postimg.cc/hG3HmsBy/IMG-0390.jpg"
-            alt="Event in your area"
-          />
+
+
+          {eventPictures.length > 0 && (
+            <img
+              className="event_img"
+              src={eventPictures[currentImageIndex]}
+              alt="Event in your area"
+            />
+          )}
         </div>
       </div>
       <NavBar />

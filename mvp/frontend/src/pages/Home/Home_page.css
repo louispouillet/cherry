@@ -108,6 +108,18 @@
     overflow-wrap: break-word;
 }
 
+/* Voir si pas un probleme pour le scroll*/
 body{
     overflow: hidden;
+}
+
+.icon_details {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: clamp(5px, 4vw, 20px);
+    height: clamp(5px, 4vw, 20px);
+    stroke-width: 2.6;
+    cursor: pointer;
+    color: white;
 }
