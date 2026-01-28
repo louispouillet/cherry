@@ -103,7 +103,6 @@ const Profile = () => {
                 {/*<p>Sortir en ville, écouter de la musique, et lire des livres.</p> */}
                 <p>{userData.hobbies}</p>
             </div>
-
             <NavBar />
         </div>
     )
