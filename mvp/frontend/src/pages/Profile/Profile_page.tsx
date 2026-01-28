@@ -100,7 +100,7 @@ const Profile = () => {
                             <button className="logout-button" onClick={() => {
                                 setShowLogout(false);
                                 setShowConfirmLogout(true);
-                            }}>Déconnexion
+                            }}>Log-out
                             </button>
                         </div>
                     )}
@@ -109,10 +109,10 @@ const Profile = () => {
                     {showConfirmLogout && (
                         <div className="logout-confirm-overlay" onClick={() => setShowConfirmLogout(false)}>
                             <div className="logout-confirm-dialog" onClick={(e) => e.stopPropagation()}>
-                                <p>Êtes-vous sûr de vouloir vous déconnecter ?</p>
+                                <p>Are you sure you want to log-out?</p>
                                 <div className="logout-confirm-buttons">
-                                    <button className="confirm-btn yes-btn" onClick={handleLogoutConfirm}>Oui</button>
-                                    <button className="confirm-btn no-btn" onClick={() => setShowConfirmLogout(false)}>Non</button>
+                                    <button className="confirm-btn yes-btn" onClick={handleLogoutConfirm}>Yes</button>
+                                    <button className="confirm-btn no-btn" onClick={() => setShowConfirmLogout(false)}>No</button>
                                 </div>
                             </div>
                         </div>
