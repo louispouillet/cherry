@@ -23,10 +23,9 @@
   color: #333;
 }
 
-.messageContainer {
+.messagePreviewContainer {
   display: flex;
   flex-direction: column;
-  /* give extra bottom padding so last items are not hidden behind the fixed NavBar */
   padding: 5vh 5vw 12vh;
   gap: 3vh;
   color: #333;

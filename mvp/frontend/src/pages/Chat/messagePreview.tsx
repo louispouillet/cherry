@@ -65,7 +65,7 @@ const messagePreview = () => {
           <SearchBar />
         </div>
       </div>
-      <div className="messageContainer">
+      <div className="messagePreviewContainer">
         {events.map((event: any) => (
           <div
             className="messageBlock"
