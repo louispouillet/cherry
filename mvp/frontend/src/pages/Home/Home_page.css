@@ -42,7 +42,100 @@
     max-height: 100vh;
     border-radius: 20px;
     object-fit: cover;
+    cursor: grab;
+    user-select: none;
+    transition: opacity 0.1s ease;
+    animation: slideIn 0.3s ease-out;
+}
 
+.event_img.swipe-left {
+    animation: swipeLeft 0.5s ease-out forwards;
+}
+
+.event_img.swipe-right {
+    animation: swipeRight 0.5s ease-out forwards;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes swipeLeft {
+    0% {
+        opacity: 1;
+        transform: translateX(0) rotate(0deg);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateX(-150vw) rotate(-30deg);
+    }
+}
+
+@keyframes swipeRight {
+    0% {
+        opacity: 1;
+        transform: translateX(0) rotate(0deg);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateX(150vw) rotate(30deg);
+    }
+
+}
+
+.event_img:active {
+    cursor: grabbing;
+}
+
+.hidden {
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+.swipe-indicator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.swipe-icon {
+    animation: popIn 0.3s ease-out;
+}
+
+@keyframes popIn {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0.7;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 .indice_image {
@@ -61,6 +154,8 @@
     background-color: rgba(255, 255, 255, 0.3);
     transition: background-color 0.3s ease;
     flex-shrink: 0;
+    transition: opacity 0.1s ease;
+    animation: slideIn 0.3s ease-out;
 }
 
 .indice_bar.active {
@@ -191,32 +286,12 @@ body {
     stroke-width: 2.6;
 }
 
-/* .logo_home {
-    width: clamp(40px, 5vw, 80px);
-    height: clamp(40px, 5vw, 80px);
-    color: black;
-    position: absolute;
-} */
-
 .logo_home {
     margin-top: 15vh;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
-
-@keyframes turn {
-
-    0%,
-    100% {
-        transform: translateY(0);
-    }
-
-    50% {
-        transform: translateY(-20px);
-    }
-}
-
 
 .logo_home h3 {
     margin: 0;
@@ -229,4 +304,15 @@ body {
     margin: 0;
     width: clamp(200px, 3vw, 300px);
     height: auto;
+    animation: rotate 2s linear infinite;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
 }

@@ -1,5 +1,90 @@
 .plus {
     display: flex;
     align-items: center;
-    
+    justify-content: center;
+    cursor: pointer !important;
+    width: 50px;
+    height: 50px;
+    background-color: #ff6b6b;
+    border: none;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    position: relative;
+    z-index: 9999;
+    pointer-events: auto !important;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.plus:hover {
+    transform: scale(1.1);
+    background-color: #ff5252;
+}
+
+.plus:active {
+    transform: scale(0.95);
+    background-color: #ff3838;
+}
+
+.icon_plus {
+    width: 28px;
+    height: 28px;
+    color: white;
+    pointer-events: none;
+}
+
+.create-event-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.create-event-content {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    max-width: 500px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.create-event-content h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.create-event-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.create-event-form label {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.create-event-form input,
+.create-event-form textarea,
+.create-event-form select {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.create-event-form textarea {
+    min-height: 100px;
+    resize: vertical;
 }

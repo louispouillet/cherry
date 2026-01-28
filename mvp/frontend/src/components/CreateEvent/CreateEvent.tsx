@@ -1,13 +1,52 @@
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import "./CreateEvent.css";
 
+interface CreateEventProps {
+    isOpen?: boolean;
+    setIsOpen?: (isOpen: boolean) => void;
+}
 
-const CreateEvent = () => {
-    const navigate = useNavigate();
+const CreateEvent = ({ isOpen: propIsOpen, setIsOpen: propSetIsOpen }: CreateEventProps) => {
+    const [internalIsOpen, setInternalIsOpen] = useState(false);
+
+    // Utiliser les props si fournies, sinon l'état interne
+    const isOpen = propIsOpen !== undefined ? propIsOpen : internalIsOpen;
+    const setIsOpen = propSetIsOpen || setInternalIsOpen;
+
+    const handleClick = () => {
+        console.log("Button clicked!");
+        setIsOpen(!isOpen);
+    };
+
     return (
-        <div  className="plus" onClick={() => navigate('/CreateEvent')}>
-            <svg xmlns="http://www.w3.org/2000/svg" className="icon_plus"viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14" /><path d="M12 5v14" /></svg>
-        </div>
+        <>
+
+            {isOpen && (
+                <div className="create-event-modal" onClick={() => setIsOpen(false)}>
+                    <div className="create-event-content" onClick={(e) => e.stopPropagation()}>
+                        <h2>Create New Event</h2>https://i.postimg.cc/hG3HmsBy/IMG-0390.jpg
+                        <form className="create-event-form">
+                            <label>Event Name:</label>
+                            <input type="text" name="eventName" required />
+
+                            <label>Description:</label>
+                            <textarea name="eventDescription" required></textarea>
+
+                            <label>Date:</label>
+                            <input type="date" name="eventDate" required />
+
+                            <label>Type:</label>
+                            <select name="eventType" required>
+                                <option value="sport">Sport</option>
+                                <option value="music">Music</option>
+                                <option value="art">Art</option>
+                                <option value="tech">Tech</option>
+                            </select>
+                        </form>
+                    </div>
+                </div>
+            )}
+        </>
     );
 }
 
