@@ -5,6 +5,7 @@ import Main from './pages/Auth/Main';
 import Chat from "./pages/Chat/Chat";   
 import Home from './pages/Home/Home_page'; 
 import Profile from "./pages/Profile/Profile_page";
+import Test from "./pages/Chat/Chatview";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './App.css';
 
@@ -19,6 +20,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/message" element={<Chat />} />
+        <Route path="/message/:groupId" element={<Test />} />
         <Route path="/home" element={<Home />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="*" element={<NotFound />} />
