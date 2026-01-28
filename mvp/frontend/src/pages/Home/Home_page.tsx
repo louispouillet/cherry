@@ -23,7 +23,13 @@ const Home_page = () => {
   const [swipeDirection, setSwipeDirection] = useState<'left' | 'right' | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [dragX, setDragX] = useState(0);
+  const [gestureLocked, setGestureLocked] = useState(false);
   const imageRef = useRef<HTMLImageElement>(null);
+  
+  const [nextEventPictures, setNextEventPictures] = useState<string[]>([]);
+  const [nextEventDate, setNextEventDate] = useState("");
+  const [nextEventDescription, setNextEventDescription] = useState("");
+  const [nextEventTitle, setNextEventTitle] = useState("");
 
   const monthNames = [
     "January", "February", "March", "April", "May", "June",
@@ -104,6 +110,16 @@ const Home_page = () => {
     setEventNbMaxParticipants(currentEvent.nbMax);
     setEventAge(currentEvent.ageMin);
     setCurrentImageIndex(0);
+    
+    // Charger le prochain événement
+    const nextIndex = eventIndex === events_city.length - 1 ? 0 : eventIndex + 1;
+    const nextEvent = events_city[nextIndex];
+    if (nextEvent) {
+      setNextEventPictures(nextEvent.photos || []);
+      setNextEventDate(nextEvent.date);
+      setNextEventDescription(nextEvent.description);
+      setNextEventTitle(nextEvent.title);
+    }
   }, [events_city, eventIndex]);
 
 
@@ -117,7 +133,8 @@ const Home_page = () => {
   };
 
   const handleSwipeStart = (e: React.TouchEvent<HTMLDivElement> | React.MouseEvent<HTMLDivElement>) => {
-    if (isEventExpanded) return;
+    // Désactiver les interactions pendant l'animation de swipe ou si geste verrouillé
+    if (isEventExpanded || swipeDirection || gestureLocked) return;
 
     if ('touches' in e) {
       setSwipeStart(e.touches[0].clientX);
@@ -146,7 +163,7 @@ const Home_page = () => {
   };
 
   const handleSwipeEnd = (e: React.TouchEvent<HTMLDivElement> | React.MouseEvent<HTMLDivElement>) => {
-    if (isEventExpanded || swipeStart === null) return;
+    if (isEventExpanded || swipeStart === null || swipeDirection || gestureLocked) return;
 
     let endX = 0;
     if ('changedTouches' in e) {
@@ -156,35 +173,37 @@ const Home_page = () => {
     }
 
     const diff = swipeStart - endX;
-    const swipeThreshold = 100;
+    const swipeThreshold = 150;
+
+    // Réinitialiser IMMÉDIATEMENT tous les états pour oublier la position du touch/clic
+    setSwipeStart(null);
+    setIsDragging(false);
+    setDragX(0);
+    setGestureLocked(true); // Verrouiller pour éviter les faux swipes sur le prochain événement
 
     if (Math.abs(diff) > swipeThreshold) {
       if (diff > 0) {
         // On ajoute l'image swipe right dans les likes
         // On l'enleve des evenements qui reviennent dans la page d'acceuil
         setSwipeDirection('left');
-        setIsDragging(false);
-        setDragX(0);
         setTimeout(() => {
           ChangeEventClick();
           setSwipeDirection(null);
-        }, 300);
+          setGestureLocked(false); // Déverrouiller après l'animation
+        }, 400);
       } else {
         // On le laisse dans les evenements qui reviennent dans la page d'acceuil
         setSwipeDirection('right');
-        setIsDragging(false);
-        setDragX(0);
         setTimeout(() => {
           ChangeEventClick();
           setSwipeDirection(null);
-        }, 300);
+          setGestureLocked(false); // Déverrouiller après l'animation
+        }, 400);
       }
     } else {
-      setIsDragging(false);
-      setDragX(0);
+      // Si pas de swipe valide, déverrouiller immédiatement
+      setGestureLocked(false);
     }
-
-    setSwipeStart(null);
   };
 
   return (
@@ -242,8 +261,47 @@ const Home_page = () => {
             </div>
           )}
 
+          {/* Prochain événement en arrière-plan */}
+          {!isEventExpanded && (isDragging || swipeDirection) && nextEventPictures.length > 0 && (
+            <div 
+              className="next-event"
+              style={{
+                opacity: swipeDirection ? 1 : 0.5,
+                transition: swipeDirection ? 'opacity 0.5s ease-out' : 'none'
+              }}
+            >
+              <div className="indice_image">
+                {nextEventPictures.map((_, index) => (
+                  <div
+                    key={index}
+                    className={`indice_bar ${index === 0 ? 'active' : ''}`}
+                    style={{ width: `calc((90vw - ${(nextEventPictures.length - 1) * 8}px) / ${nextEventPictures.length})`, maxWidth: `${320 / nextEventPictures.length}px` }}
+                  >
+                  </div>
+                ))}
+              </div>
+
+              <div className="event_info_container">
+                <div className="event_date">
+                  <h2>{nextEventDate.substring(8, 10)} {monthNames[parseInt(nextEventDate.substring(5, 7)) - 1]} {nextEventDate.substring(0, 4)}</h2>
+                </div>
+                <div className="event_info">
+                  <h2 className="event_title">{nextEventTitle}</h2>
+                  <p className="event_description">{nextEventDescription}</p>
+                </div>
+              </div>
+
+              <img
+                className="event_img"
+                src={nextEventPictures[0]}
+                alt="Next event"
+                style={{ cursor: 'grab', userSelect: 'none' }}
+              />
+            </div>
+          )}
+
           <div
-            className="images_event"
+            className={`images_event ${swipeDirection === 'left' ? 'swipe-left' : swipeDirection === 'right' ? 'swipe-right' : ''}`}
             onClick={handleEventClick}
             onTouchStart={handleSwipeStart}
             onTouchEnd={handleSwipeEnd}
@@ -252,7 +310,7 @@ const Home_page = () => {
             onMouseUp={handleSwipeEnd}
             onMouseMove={handleSwipeMove}
             style={{
-              transform: isDragging ? `translateX(${dragX}px) rotate(${dragX / 10}deg)` : 'none',
+              transform: isDragging && !swipeDirection ? `translateX(${dragX}px) rotate(${dragX / 10}deg)` : 'none',
               transition: isDragging ? 'none' : 'transform 0.3s ease'
             }}
           >
@@ -286,21 +344,6 @@ const Home_page = () => {
               </div>
             )}
 
-            {isDragging && (
-              <div className="swipe-indicator">
-                {dragX > 50 ? (
-                  <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="#FF9FC9" stroke="#FF9FC9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="swipe-icon">
-                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                  </svg>
-                ) : dragX < -50 ? (
-                  <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="swipe-icon">
-                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                  </svg>
-                ) : null}
-              </div>
-            )}
-
             <img
               ref={imageRef}
               className={`event_img ${swipeDirection === 'left' ? 'swipe-left' : swipeDirection === 'right' ? 'swipe-right' : ''}`}
@@ -309,6 +352,22 @@ const Home_page = () => {
               style={{ cursor: 'grab', userSelect: 'none' }}
             />
           </div>
+
+          {/* Icônes de swipe en dehors de l'image */}
+          {!isEventExpanded && isDragging && (
+            <div className="swipe-icons-overlay">
+              {dragX > 50 ? (
+                <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="#FF9FC9" stroke="#FF9FC9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="swipe-icon">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+              ) : dragX < -50 ? (
+                <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="swipe-icon">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              ) : null}
+            </div>
+          )}
 
           {isEventExpanded && (
             <div className="event_details_expanded">
