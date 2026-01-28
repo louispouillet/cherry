@@ -1,9 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import "./Home_page.css";
 import NavBar from "../../components/NavBar/NavBar";
 
-
+// Les evenements s'affichent en fonction de la ville de l'utilisateur
+// Si ils ne sont pas plein (mettre un status dans le tableau des events)
+// si l'age min est respecté (a ajouter dans le tableau des events)
+// Si l'utilisateur n'a pas deja liké ou disliké l'event (a ajouter dans la BDD des users)
 const Home_page = () => {
   const [eventIndex, setEventIndex] = useState(0);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -17,7 +20,17 @@ const Home_page = () => {
   const [eventAge, setEventAge] = useState(0);
   const [loading, setLoading] = useState(false);
   const totalImages = eventPictures.length;
-  const [events_city , setEvents_city] = useState<any[]>([]);
+  const [events_city, setEvents_city] = useState<any[]>([]);
+  const [swipeStart, setSwipeStart] = useState<number | null>(null);
+  const [swipeDirection, setSwipeDirection] = useState<'left' | 'right' | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragX, setDragX] = useState(0);
+  const imageRef = useRef<HTMLImageElement>(null);
+  const monthNames = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
+
   // Mettre en useState
   let events = [];
 
@@ -40,46 +53,126 @@ const Home_page = () => {
       let city_user = data.data.city;
       const filteredEvents = events.filter(
         (element: any) => element.city === city_user
-        );
-        console.log(filteredEvents);
+      );
+
       setEvents_city(filteredEvents);
-      console.log(events_city);
-      if (events_city.length === 0) {
+
+      // Mettre à jour les infos du premier événement directement
+      if (filteredEvents.length > 0) {
+        const firstEvent = filteredEvents[0];
+        setEventPictures(firstEvent.photos || []);
+        setEventDate(firstEvent.date);
+        setEventDescription(firstEvent.description);
+        setEventTitle(firstEvent.title);
+        setEventNbParticipants(firstEvent.nbParticipants);
+        setEventNbMaxParticipants(firstEvent.nbMax);
+        setEventAge(firstEvent.ageMin);
+      } else {
         setLoading(true);
-        return;
       }
-      
-      // utilier events_city pour avoir tous les events de la ville du user
-      setEventPictures(events_city[eventIndex].photos);
-      setEventDate(events_city[eventIndex].date);
-      setEventDescription(events_city[eventIndex].description);
-      setEventTitle(events_city[eventIndex].title);
-      setEventNbParticipants(events_city[eventIndex].nbParticipants);
-      setEventNbMaxParticipants(events_city[eventIndex].nbMax);
-      setEventAge(events_city[eventIndex].ageMin);
-      
-      // console.log(events_city);
-      // console.log(eventPictures);
-      // console.log(mockEventPictures[0]);
-      
+
+
     } catch (err: any) {
       console.error(err);
-      
+
     }
     return (eventPictures);
   }
   useEffect(() => {
     event_loading();
-    console.log("Events in your city:", events_city);
   }, []);
+
+  useEffect(() => {
+    if (events_city.length === 0) return;
+
+    const currentEvent = events_city[eventIndex];
+
+    setEventPictures(currentEvent.photos);
+    setEventDate(currentEvent.date);
+    setEventDescription(currentEvent.description);
+    setEventTitle(currentEvent.title);
+    setEventNbParticipants(currentEvent.nbParticipants);
+    setEventNbMaxParticipants(currentEvent.nbMax);
+    setEventAge(currentEvent.ageMin);
+    setCurrentImageIndex(0);
+  }, [events_city, eventIndex]);
 
   const handleEventClick = () => {
     setCurrentImageIndex((prev) => prev === totalImages - 1 ? 0 : prev + 1);
   };
 
   const ChangeEventClick = () => {
-    setEventIndex((prev) => prev === totalImages - 1 ? 0 : prev + 1);
-    console.log(eventIndex);
+    setEventIndex((prev) => prev === events_city.length - 1 ? 0 : prev + 1);
+  };
+
+  const handleSwipeStart = (e: React.TouchEvent<HTMLDivElement> | React.MouseEvent<HTMLDivElement>) => {
+    if (isEventExpanded) return;
+
+    setIsDragging(true);
+
+    if ('touches' in e) {
+      setSwipeStart(e.touches[0].clientX);
+    } else {
+      setSwipeStart(e.clientX);
+    }
+  };
+
+  const handleSwipeMove = (e: React.TouchEvent<HTMLDivElement> | React.MouseEvent<HTMLDivElement>) => {
+    if (!isDragging || swipeStart === null) return;
+
+    let currentX = 0;
+    if ('touches' in e) {
+      currentX = e.touches[0].clientX;
+    } else {
+      currentX = e.clientX;
+    }
+
+    const diff = swipeStart - currentX;
+    setDragX(-diff);
+  };
+
+  const handleSwipeEnd = (e: React.TouchEvent<HTMLDivElement> | React.MouseEvent<HTMLDivElement>) => {
+    if (isEventExpanded || swipeStart === null) return;
+
+    let endX = 0;
+    if ('changedTouches' in e) {
+      endX = e.changedTouches[0].clientX;
+    } else {
+      endX = e.clientX;
+    }
+
+    const diff = swipeStart - endX;
+    const swipeThreshold = 100;
+
+    if (Math.abs(diff) > swipeThreshold) {
+      if (diff > 0) {
+        // On ajoute l'image swipe right dans les likes
+        // On l'enleve des evenements qui reviennent dans la page d'acceuil
+        setSwipeDirection('left');
+        setTimeout(() => {
+          ChangeEventClick();
+          setCurrentImageIndex(0);
+          setSwipeDirection(null);
+          setIsDragging(false);
+          setDragX(0);
+        }, 300);
+      } else {
+        // On le laisse dans les evenements qui reviennent dans la page d'acceuil
+        setSwipeDirection('right');
+        setTimeout(() => {
+          ChangeEventClick();
+          setCurrentImageIndex(0);
+          setSwipeDirection(null);
+          setIsDragging(false);
+          setDragX(0);
+        }, 300);
+      }
+    } else {
+      setIsDragging(false);
+      setDragX(0);
+    }
+
+    setSwipeStart(null);
   };
 
   return (
@@ -134,8 +227,17 @@ const Home_page = () => {
             </div>
           )}
 
-          <div className="images_event" onClick={handleEventClick}>
-            <div className="indice_image">
+          <div
+            className="images_event"
+            onClick={handleEventClick}
+            onTouchStart={handleSwipeStart}
+            onTouchEnd={handleSwipeEnd}
+            onTouchMove={handleSwipeMove}
+            onMouseDown={handleSwipeStart}
+            onMouseUp={handleSwipeEnd}
+            onMouseMove={handleSwipeMove}
+          >
+            <div className={`indice_image ${isDragging ? 'hidden' : ''}`}>
               {eventPictures.map((_, index) => (
                 <div
                   key={index}
@@ -148,10 +250,10 @@ const Home_page = () => {
 
             {!isEventExpanded && (
               <>
-                <div>
-                  <h2 className="event_date">16 Janvier 2026</h2>
+                <div className={`event_date ${isDragging ? 'hidden' : ''}`}>
+                  <h2>{eventDate.substring(8, 10)} {monthNames[parseInt(eventDate.substring(5, 7)) - 1]} {eventDate.substring(0, 4)}</h2>
                 </div>
-                <div className="event_info">
+                <div className={`event_info ${isDragging ? 'hidden' : ''}`}>
                   <h2 className="event_title">{eventTitle}</h2>
                   <p className="event_description"> {eventDescription}</p>
                   <div className="icon_details" onClick={(e) => {
@@ -164,17 +266,29 @@ const Home_page = () => {
                 </div>
               </>
             )}
-          
+
+            {isDragging && (
+              <div className="swipe-indicator">
+                {dragX > 50 ? (
+                  <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="#FF9FC9" stroke="#FF9FC9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="swipe-icon">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                  </svg>
+                ) : dragX < -50 ? (
+                  <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="swipe-icon">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                ) : null}
+              </div>
+            )}
 
             <img
-              className="event_img"
+              ref={imageRef}
+              className={`event_img ${swipeDirection === 'left' ? 'swipe-left' : swipeDirection === 'right' ? 'swipe-right' : ''}`}
               src={eventPictures[currentImageIndex]}
               alt="Event in your area"
+              style={{ cursor: 'grab', userSelect: 'none', transform: isDragging ? `translateX(${dragX}px) rotate(${dragX / 10}deg)` : 'none', transition: isDragging ? 'none' : 'transform 0.3s ease' }}
             />
-          </div>
-          <div >  {/* a retirer des que on a le swipe */}
-            <button onClick={(e) => { e.stopPropagation(); ChangeEventClick(); }}>Join</button>
-            <button onClick={(e) => e.stopPropagation()}>Deny</button>
           </div>
 
           {isEventExpanded && (
@@ -184,7 +298,7 @@ const Home_page = () => {
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#FF9FC9" stroke="#FF9FC9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="detail_icon"><path d="M8 2v4" /><path d="M16 2v4" /><rect width="18" height="18" x="3" y="4" rx="2" /><path d="M3 10h18" /></svg>
                   <h3>Date</h3>
                 </div>
-                <p>16 Janvier 2026</p>
+                <p>{eventDate.substring(8, 10)} {monthNames[parseInt(eventDate.substring(5, 7)) - 1]} {eventDate.substring(0, 4)}</p>
               </div>
               <div className="detail_item">
                 <div className="detail_header">
