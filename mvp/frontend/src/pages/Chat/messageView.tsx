@@ -1,9 +1,9 @@
 import axios from "axios";
 import { useEffect } from "react";
+import "./messageView.css";
 
 
-
-const test = () => {
+const messageView = () => {
     async function Search() {
         try {
             const groupId = window.location.pathname.split("/")[2];
@@ -29,4 +29,4 @@ const test = () => {
     );
 }
 
-export default test;
+export default messageView;

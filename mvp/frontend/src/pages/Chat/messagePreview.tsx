@@ -1,5 +1,5 @@
 import axios from "axios";
-import "./Chat.css";
+import "./messagePreview.css";
 import NavBar from "../../components/NavBar/NavBar";
 import CreateEvent from "../../components/CreateEvent/CreateEvent";
 import SearchBar from "../../components/SearchBar/SearchBar";
@@ -14,15 +14,14 @@ import {
   differenceInYears,
 } from "date-fns";
 
-const Chat = () => {
+const messagePreview = () => {
   const navigate = useNavigate();
   const [events, setEvents] = useState<any[]>([]);
 
   async function Search() {
     try {
-      const token = localStorage.getItem("token");
       const response = await axios.get("http://localhost:3000/messagePreview", {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
       setEvents(response.data.response);
     } catch (error) {
@@ -95,4 +94,4 @@ const Chat = () => {
 };
 
 
-export default Chat;
+export default messagePreview;
