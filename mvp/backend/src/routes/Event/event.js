@@ -42,13 +42,18 @@ router.get('/events/:id/users', async (req, res) => {
 // créer un nouvel event
 router.post('/events/new', async (req, res) => {
     try {
-        const { name, date, location, description } = req.body;
+        const { firstname, lastname, date, description, type, nb_participant_limit, pictures } = req.body;
 
         const newEvent = {
-            name,
-            date,
-            location,
-            description,
+            firstname : firstname,
+            lastname: lastname,
+            date: date,
+            type: type,
+            description: description,
+            pictures: pictures,
+            nb_participant_limit: nb_participant_limit,
+            nb_participant_join: 0,
+            status: 'joinable', 
             users: [] // Initialise avec une liste vide d'utilisateurs
         };
         const result = await CreateEvent(newEvent);

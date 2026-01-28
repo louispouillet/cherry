@@ -8,6 +8,7 @@ import Profile from "./pages/Profile/Profile_page";
 import MessageView from "./pages/Chat/messageView";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './App.css';
+import CreateEvent from "./components/CreateEvent/CreateEvent";
 
     
 
@@ -24,6 +25,7 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="*" element={<NotFound />} />
+        <Route path="/create-event" element={<CreateEvent />} />
       </Routes>
     </BrowserRouter>
   )

@@ -33,19 +33,6 @@
     pointer-events: none;
 }
 
-.create-event-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-
 .create-event-content {
     background: white;
     border-radius: 20px;
@@ -59,7 +46,7 @@
 
 .create-event-content h2 {
     margin-top: 0;
-    margin-bottom: 20px;
+    margin-bottom: 50px;
     color: #333;
 }
 
@@ -70,7 +57,7 @@
 }
 
 .create-event-form label {
-    font-weight: 600;
+    font-weight: 800;
     color: #333;
     margin-bottom: 5px;
 }
@@ -78,13 +65,14 @@
 .create-event-form input,
 .create-event-form textarea,
 .create-event-form select {
-    padding: 10px;
+    padding: 15px;
     border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 14px;
+    border-radius: 10px;
+    font-size: 15px;
 }
 
 .create-event-form textarea {
     min-height: 100px;
     resize: vertical;
+    border-radius: 10px;
 }
