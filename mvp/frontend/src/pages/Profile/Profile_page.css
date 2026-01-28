@@ -1,18 +1,18 @@
-
 .profile-page {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    position: relative;
+    position: relative; /* positionnement des éléments enfants */
     color: black;
     background-color: #f5f5dc;
-    width: 100%;
-    flex: 1;
-    overflow-y: auto;
-    padding: 0 16px 100px 16px;
-    box-sizing: border-box;
-    z-index: 0;
-    overscroll-behavior-y: contain;
+    width: 100%; /* prend toute la largeur disponible */
+    height: 100vh; /* prend toute la hauteur de la fenêtre */
+    flex: 1; /* permet à la page de s'étendre pour remplir l'espace disponible */
+    overflow-y: auto; /* permet le défilement vertical si le contenu dépasse la hauteur */
+    padding: 0 16px 100px 16px; /* espace intérieur pour éviter que le contenu touche les bords */
+    box-sizing: border-box; /* inclut le padding dans la largeur et la hauteur */
+    z-index: 0; /* assure que la page est en arrière-plan par rapport aux éléments positionnés absolument */
+    overscroll-behavior-y: contain; /* empêche le rebond de la page lors du défilement */
 }
 
 .profile-header {
@@ -24,29 +24,24 @@
     margin-bottom: -4px;
 }
 
-.image-section {
+.image-section { /* Section de l'image de profil */
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
-    object-fit: cover;
-    
+    /* prend toute la largeur disponible */
 }
 
-.profile-picture {
+.profile-picture { /* Style de l'image de profil */
     margin-bottom: 10px;
     width: 390px;
     border-radius: 30px;
-    /* image en forme de cercle */
-
-    /* image remplisse le conteneur */
     box-shadow: none;
-
 
 }
 
 /* Style des sections About Me et Hobbies */
-.AboutMe-container {
+.AboutMe-container, .Hobbies-container {
     background: rgb(252, 222, 222);
     padding: 15px;
     border-radius: 30px;
@@ -54,7 +49,6 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    justify-content: flex-start;
     width: 100%;
     min-height: 150px;
     box-sizing: border-box;
@@ -64,34 +58,18 @@
     line-height: 1;
     word-wrap: break-word;
     overflow-wrap: break-word;
-}
-
-.Hobbies-container {
-    background: rgb(252, 222, 222);
-    padding: 15px;
-    border-radius: 30px;
-    box-shadow: rgb(127, 120, 120) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    width: 100%;
-    min-height: 150px;
-    box-sizing: border-box;
-    text-align: left;
-    font-size: 15px;
-    line-height: 1;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
+    margin-bottom: 10px;
 }
 
 .AboutMe-container p,
 .Hobbies-container p {
-    width: 100%;
     word-wrap: break-word;
     overflow-wrap: break-word;
     margin: 0;
     padding: 0;
+    margin-bottom: 90px;
 }
+
 
 .top-right-icons {
     display: flex;
@@ -209,4 +187,16 @@
 .no-btn:hover {
     background-color: #d0d0d0;
     transform: scale(1.05);
+}
+
+@media (max-width: 600px) {
+    .profile-picture {
+        width: 100%;
+    }
+}
+
+@media (max-width: 2000px) {
+    .profile-picture {
+        width: 90%;
+    }
 }
