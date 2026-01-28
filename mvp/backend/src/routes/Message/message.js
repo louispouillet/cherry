@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const auth = require("../../middelware/auth");
-const { getMessageByGroupId, getMessagePreview } = require("./message.query");
+const { getMessageByGroupId, getMessagePreview, getGroupInfoById } = require("./message.query");
 
 
 router.get("/messagePreview", auth, async (req, res) => {
@@ -13,6 +13,16 @@ router.get("/messagePreview", auth, async (req, res) => {
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
+});
+
+router.get('/groupInfo/:groupId', auth, async (req, res) => {
+  try {
+    const { groupId } = req.params;
+    const response = await getGroupInfoById(groupId);
+    res.status(200).json(response);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 router.get("/messageView/:groupId", auth, async (req, res) => {
