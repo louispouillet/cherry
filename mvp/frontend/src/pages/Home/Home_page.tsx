@@ -2,12 +2,12 @@ import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import "./Home_page.css";
 import NavBar from "../../components/NavBar/NavBar";
+import CreateEvent from "../../components/CreateEvent/CreateEvent";
+import { useNavigate } from "react-router-dom";
 
-// Les evenements s'affichent en fonction de la ville de l'utilisateur
-// Si ils ne sont pas plein (mettre un status dans le tableau des events)
-// si l'age min est respecté (a ajouter dans le tableau des events)
-// Si l'utilisateur n'a pas deja liké ou disliké l'event (a ajouter dans la BDD des users)
 const Home_page = () => {
+  const navigate = useNavigate();
+  const [isCreateEventOpen, setIsCreateEventOpen] = useState(false);
   const [eventIndex, setEventIndex] = useState(0);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [eventPictures, setEventPictures] = useState<string[]>([]);
@@ -26,6 +26,7 @@ const Home_page = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [dragX, setDragX] = useState(0);
   const imageRef = useRef<HTMLImageElement>(null);
+
   const monthNames = [
     "January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"
@@ -183,10 +184,13 @@ const Home_page = () => {
             <div className="header_container">
               <h1 className="title_home">cherry</h1>
               <div className="top_right_icons">
-                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon_plus">
-                  <path d="M5 12h14" />
-                  <path d="M12 5v14" />
-                </svg>
+                <div onClick={() => setIsCreateEventOpen(true)} style={{ cursor: 'pointer' }}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon_plus">
+                    <path d="M5 12h14" />
+                    <path d="M12 5v14" />
+                  </svg>
+
+                </div>
                 <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon_filter">
                   <path d="M10 5H3" />
                   <path d="M12 19H3" />
@@ -337,7 +341,7 @@ const Home_page = () => {
           <div className="header_container">
             <h1 className="title_home">cherry</h1>
             <div className="top_right_icons">
-              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon_plus">
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon_plus" onClick={() => setIsCreateEventOpen(true)} style={{ cursor: 'pointer' }}>
                 <path d="M5 12h14" />
                 <path d="M12 5v14" />
               </svg>
@@ -360,6 +364,7 @@ const Home_page = () => {
           </div>
         </div>
       )}
+      <CreateEvent isOpen={isCreateEventOpen} setIsOpen={setIsCreateEventOpen} />
       <NavBar />
     </>
   );
