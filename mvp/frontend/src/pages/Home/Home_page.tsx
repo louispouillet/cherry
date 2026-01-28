@@ -2,12 +2,10 @@ import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import "./Home_page.css";
 import NavBar from "../../components/NavBar/NavBar";
-import CreateEvent from "../../components/CreateEvent/CreateEvent";
 import { useNavigate } from "react-router-dom";
 
 const Home_page = () => {
   const navigate = useNavigate();
-  const [isCreateEventOpen, setIsCreateEventOpen] = useState(false);
   const [eventIndex, setEventIndex] = useState(0);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [eventPictures, setEventPictures] = useState<string[]>([]);
@@ -52,13 +50,23 @@ const Home_page = () => {
       events = response_events.data;
       const data = await axios.get(`http://localhost:3000/user`, { headers: { 'Authorization': `Bearer ${token}` } });
       let city_user = data.data.city;
-      const filteredEvents = events.filter(
-        (element: any) => element.city === city_user
-      );
+
+      const verifEvent = (event: any, cityUser: string, userId: string) => {
+        if (event.city !== cityUser) {
+          return false;
+        }
+
+        if (event.participants.includes(userId)) {
+          return false;
+        }
+        return true;
+      };
+
+      const userId = data.data._id;
+      const filteredEvents = events.filter((event: any) => verifEvent(event, city_user, userId));
 
       setEvents_city(filteredEvents);
 
-      // Mettre à jour les infos du premier événement directement
       if (filteredEvents.length > 0) {
         const firstEvent = filteredEvents[0];
         setEventPictures(firstEvent.photos || []);
@@ -98,6 +106,8 @@ const Home_page = () => {
     setCurrentImageIndex(0);
   }, [events_city, eventIndex]);
 
+
+
   const handleEventClick = () => {
     setCurrentImageIndex((prev) => prev === totalImages - 1 ? 0 : prev + 1);
   };
@@ -109,8 +119,6 @@ const Home_page = () => {
   const handleSwipeStart = (e: React.TouchEvent<HTMLDivElement> | React.MouseEvent<HTMLDivElement>) => {
     if (isEventExpanded) return;
 
-    setIsDragging(true);
-
     if ('touches' in e) {
       setSwipeStart(e.touches[0].clientX);
     } else {
@@ -119,7 +127,7 @@ const Home_page = () => {
   };
 
   const handleSwipeMove = (e: React.TouchEvent<HTMLDivElement> | React.MouseEvent<HTMLDivElement>) => {
-    if (!isDragging || swipeStart === null) return;
+    if (swipeStart === null) return;
 
     let currentX = 0;
     if ('touches' in e) {
@@ -129,7 +137,12 @@ const Home_page = () => {
     }
 
     const diff = swipeStart - currentX;
-    setDragX(-diff);
+
+    // Ne commence à drag que si le mouvement est significatif (> 5px)
+    if (Math.abs(diff) > 5) {
+      setIsDragging(true);
+      setDragX(-diff);
+    }
   };
 
   const handleSwipeEnd = (e: React.TouchEvent<HTMLDivElement> | React.MouseEvent<HTMLDivElement>) => {
@@ -150,22 +163,20 @@ const Home_page = () => {
         // On ajoute l'image swipe right dans les likes
         // On l'enleve des evenements qui reviennent dans la page d'acceuil
         setSwipeDirection('left');
+        setIsDragging(false);
+        setDragX(0);
         setTimeout(() => {
           ChangeEventClick();
-          setCurrentImageIndex(0);
           setSwipeDirection(null);
-          setIsDragging(false);
-          setDragX(0);
         }, 300);
       } else {
         // On le laisse dans les evenements qui reviennent dans la page d'acceuil
         setSwipeDirection('right');
+        setIsDragging(false);
+        setDragX(0);
         setTimeout(() => {
           ChangeEventClick();
-          setCurrentImageIndex(0);
           setSwipeDirection(null);
-          setIsDragging(false);
-          setDragX(0);
         }, 300);
       }
     } else {
@@ -184,7 +195,7 @@ const Home_page = () => {
             <div className="header_container">
               <h1 className="title_home">cherry</h1>
               <div className="top_right_icons">
-                <div onClick={() => setIsCreateEventOpen(true)} style={{ cursor: 'pointer' }}>
+                <div onClick={() => navigate("/create-event")} style={{ cursor: 'pointer' }}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon_plus">
                     <path d="M5 12h14" />
                     <path d="M12 5v14" />
@@ -240,6 +251,10 @@ const Home_page = () => {
             onMouseDown={handleSwipeStart}
             onMouseUp={handleSwipeEnd}
             onMouseMove={handleSwipeMove}
+            style={{
+              transform: isDragging ? `translateX(${dragX}px) rotate(${dragX / 10}deg)` : 'none',
+              transition: isDragging ? 'none' : 'transform 0.3s ease'
+            }}
           >
             <div className={`indice_image ${isDragging ? 'hidden' : ''}`}>
               {eventPictures.map((_, index) => (
@@ -253,11 +268,11 @@ const Home_page = () => {
             </div>
 
             {!isEventExpanded && (
-              <>
-                <div className={`event_date ${isDragging ? 'hidden' : ''}`}>
+              <div className="event_info_container">
+                <div className="event_date">
                   <h2>{eventDate.substring(8, 10)} {monthNames[parseInt(eventDate.substring(5, 7)) - 1]} {eventDate.substring(0, 4)}</h2>
                 </div>
-                <div className={`event_info ${isDragging ? 'hidden' : ''}`}>
+                <div className="event_info">
                   <h2 className="event_title">{eventTitle}</h2>
                   <p className="event_description"> {eventDescription}</p>
                   <div className="icon_details" onClick={(e) => {
@@ -268,7 +283,7 @@ const Home_page = () => {
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-move-up-icon lucide-move-up"><path d="M8 6L12 2L16 6" /><path d="M12 2V22" /></svg>
                   </div>
                 </div>
-              </>
+              </div>
             )}
 
             {isDragging && (
@@ -291,7 +306,7 @@ const Home_page = () => {
               className={`event_img ${swipeDirection === 'left' ? 'swipe-left' : swipeDirection === 'right' ? 'swipe-right' : ''}`}
               src={eventPictures[currentImageIndex]}
               alt="Event in your area"
-              style={{ cursor: 'grab', userSelect: 'none', transform: isDragging ? `translateX(${dragX}px) rotate(${dragX / 10}deg)` : 'none', transition: isDragging ? 'none' : 'transform 0.3s ease' }}
+              style={{ cursor: 'grab', userSelect: 'none' }}
             />
           </div>
 
@@ -341,10 +356,12 @@ const Home_page = () => {
           <div className="header_container">
             <h1 className="title_home">cherry</h1>
             <div className="top_right_icons">
-              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon_plus" onClick={() => setIsCreateEventOpen(true)} style={{ cursor: 'pointer' }}>
-                <path d="M5 12h14" />
-                <path d="M12 5v14" />
-              </svg>
+              <div onClick={() => navigate("/create-event")} style={{ cursor: 'pointer' }}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon_plus" >
+                  <path d="M5 12h14" />
+                  <path d="M12 5v14" />
+                </svg>
+              </div>
               <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon_filter">
                 <path d="M10 5H3" />
                 <path d="M12 19H3" />
@@ -364,7 +381,6 @@ const Home_page = () => {
           </div>
         </div>
       )}
-      <CreateEvent isOpen={isCreateEventOpen} setIsOpen={setIsCreateEventOpen} />
       <NavBar />
     </>
   );
