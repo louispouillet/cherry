@@ -15,16 +15,19 @@ const Home_page = () => {
   const [eventNbParticipants, setEventNbParticipants] = useState(0);
   const [eventNbMaxParticipants, setEventNbMaxParticipants] = useState(0);
   const [eventAge, setEventAge] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const totalImages = eventPictures.length;
 
+  // Mettre en useState
   let events = [];
   let events_city: any = [];
-  const mockEventPictures = [ // Pour tel en attendant deploiement backend
+
+  // Pour tel en attendant deploiement backend
+  const mockEventPictures = [ 
     "https://i.postimg.cc/hG3HmsBy/IMG-0390.jpg",
     "https://i.postimg.cc/V63hqSQ3/Full-Size-Render.jpg",
     "https://i.postimg.cc/3wKLV3QQ/IMG-6320.jpg"
   ];
-  const totalImages = eventPictures.length;
 
   async function event_loading() {
     // event.preventDefault();
@@ -42,7 +45,7 @@ const Home_page = () => {
       });
       console.log("Events in your city:", events_city.length);
       if (events_city.length === 0) {
-        setLoading(false);
+        setLoading(true);
         return;
       }
 
@@ -76,7 +79,7 @@ const Home_page = () => {
 
   return (
     <>
-      {loading && (
+      {!loading && (
         <div>
           {!isEventExpanded && (
             <div className="header_container">
@@ -205,32 +208,34 @@ const Home_page = () => {
           )}
         </div>
       )}
-      <div>
-        <div className="header_container">
-          <h1 className="title_home">cherry</h1>
-          <div className="top_right_icons">
-            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon_plus">
-              <path d="M5 12h14" />
-              <path d="M12 5v14" />
-            </svg>
-            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon_filter">
-              <path d="M10 5H3" />
-              <path d="M12 19H3" />
-              <path d="M14 3v4" />
-              <path d="M16 17v4" />
-              <path d="M21 12h-9" />
-              <path d="M21 19h-5" />
-              <path d="M21 5h-7" />
-              <path d="M8 10v4" />
-              <path d="M8 12H3" />
-            </svg>
+      {loading && (
+        <div>
+          <div className="header_container">
+            <h1 className="title_home">cherry</h1>
+            <div className="top_right_icons">
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon_plus">
+                <path d="M5 12h14" />
+                <path d="M12 5v14" />
+              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon_filter">
+                <path d="M10 5H3" />
+                <path d="M12 19H3" />
+                <path d="M14 3v4" />
+                <path d="M16 17v4" />
+                <path d="M21 12h-9" />
+                <path d="M21 19h-5" />
+                <path d="M21 5h-7" />
+                <path d="M8 10v4" />
+                <path d="M8 12H3" />
+              </svg>
+            </div>
+          </div>
+          <div className="logo_home">
+            <img src="https://raw.githubusercontent.com/LoucheVDC/Assets/main/cherry.png" alt="logo" />
+            <h3> No event in your area ! Loading ...</h3>
           </div>
         </div>
-        <div className="logo_home">
-          <img src="https://raw.githubusercontent.com/LoucheVDC/Assets/main/cherry.png" alt="logo" />
-          <h3> No event in your area ! Loading ...</h3>
-        </div>
-      </div>
+      )}
       <NavBar />
     </>
   );
