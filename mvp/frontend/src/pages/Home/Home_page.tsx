@@ -9,7 +9,7 @@ const Home_page = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [eventPictures, setEventPictures] = useState<string[]>([]);
   const [isEventExpanded, setIsEventExpanded] = useState(false);
-  const [eventDate, setEventDate] = useState("");
+  const [eventDate, setEventDate] = useState(""); // A faire et ajouter type
   const [eventDescription, setEventDescription] = useState("");
   const [eventTitle, setEventTitle] = useState("");
   const [eventNbParticipants, setEventNbParticipants] = useState(0);
@@ -17,13 +17,12 @@ const Home_page = () => {
   const [eventAge, setEventAge] = useState(0);
   const [loading, setLoading] = useState(false);
   const totalImages = eventPictures.length;
-
+  const [events_city , setEvents_city] = useState<any[]>([]);
   // Mettre en useState
   let events = [];
-  let events_city: any = [];
 
   // Pour tel en attendant deploiement backend
-  const mockEventPictures = [ 
+  const mockEventPictures = [
     "https://i.postimg.cc/hG3HmsBy/IMG-0390.jpg",
     "https://i.postimg.cc/V63hqSQ3/Full-Size-Render.jpg",
     "https://i.postimg.cc/3wKLV3QQ/IMG-6320.jpg"
@@ -31,6 +30,7 @@ const Home_page = () => {
 
   async function event_loading() {
     // event.preventDefault();
+
     const token = localStorage.getItem("token");
 
     try {
@@ -38,17 +38,17 @@ const Home_page = () => {
       events = response_events.data;
       const data = await axios.get(`http://localhost:3000/user`, { headers: { 'Authorization': `Bearer ${token}` } });
       let city_user = data.data.city;
-      events.forEach((element: any) => {
-        if (element.city == city_user) {
-          events_city.push(element);
-        }
-      });
-      console.log("Events in your city:", events_city.length);
+      const filteredEvents = events.filter(
+        (element: any) => element.city === city_user
+        );
+        console.log(filteredEvents);
+      setEvents_city(filteredEvents);
+      console.log(events_city);
       if (events_city.length === 0) {
         setLoading(true);
         return;
       }
-
+      
       // utilier events_city pour avoir tous les events de la ville du user
       setEventPictures(events_city[eventIndex].photos);
       setEventDate(events_city[eventIndex].date);
@@ -57,25 +57,30 @@ const Home_page = () => {
       setEventNbParticipants(events_city[eventIndex].nbParticipants);
       setEventNbMaxParticipants(events_city[eventIndex].nbMax);
       setEventAge(events_city[eventIndex].ageMin);
-
+      
       // console.log(events_city);
       // console.log(eventPictures);
       // console.log(mockEventPictures[0]);
-
+      
     } catch (err: any) {
       console.error(err);
-
+      
     }
     return (eventPictures);
   }
   useEffect(() => {
     event_loading();
+    console.log("Events in your city:", events_city);
   }, []);
 
   const handleEventClick = () => {
     setCurrentImageIndex((prev) => prev === totalImages - 1 ? 0 : prev + 1);
   };
 
+  const ChangeEventClick = () => {
+    setEventIndex((prev) => prev === totalImages - 1 ? 0 : prev + 1);
+    console.log(eventIndex);
+  };
 
   return (
     <>
@@ -159,12 +164,17 @@ const Home_page = () => {
                 </div>
               </>
             )}
+          
 
             <img
               className="event_img"
               src={eventPictures[currentImageIndex]}
               alt="Event in your area"
             />
+          </div>
+          <div >  {/* a retirer des que on a le swipe */}
+            <button onClick={(e) => { e.stopPropagation(); ChangeEventClick(); }}>Join</button>
+            <button onClick={(e) => e.stopPropagation()}>Deny</button>
           </div>
 
           {isEventExpanded && (
@@ -181,7 +191,7 @@ const Home_page = () => {
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#FF9FC9" stroke="#FF9FC9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="detail_icon"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z" /><circle cx="7.5" cy="7.5" r=".5" fill="#FF9FC9" /></svg>
                   <h3>Type</h3>
                 </div>
-                <p>Party</p>
+                <p>Party</p> {/* A changer pour avoir le type d'event (mettre la colonne dans la BDD*/}
               </div>
               <div className="detail_item">
                 <div className="detail_header">
