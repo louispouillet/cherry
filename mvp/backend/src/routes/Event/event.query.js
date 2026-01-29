@@ -27,7 +27,7 @@ async function getEventsAll() {
 async function getUsersEvent(eventId) {
     try {
         const conn = await db();
-        const event = await conn.collection('events').findOne({ _id: new ObjectId(eventId) });
+        const event = await conn.collection('Events').findOne({ _id: new ObjectId(eventId) });
         if (!event) {
             throw new Error('Event not found');
         }
@@ -41,7 +41,7 @@ async function getUsersEvent(eventId) {
 async function CreateEvent(newEvent) {
     try {
         const conn = await db();
-        return await conn.collection('events').insertOne(newEvent);
+        return await conn.collection('Events').insertOne(newEvent);
     } catch (error) {
         console.error('Mongo query error CreateEvent:', error);
         throw error;
@@ -51,7 +51,7 @@ async function CreateEvent(newEvent) {
 async function updateEvent(eventId, updateData) {
     try {
         const conn = await db();
-        return await conn.collection('events').updateOne(
+        return await conn.collection('Events').updateOne(
             { _id: new ObjectId(eventId) }, // Filtre pour trouver l'event par son ID
             { $set: updateData } // Met à jour les champs spécifiés dans updateData
         );
@@ -64,11 +64,25 @@ async function updateEvent(eventId, updateData) {
 async function deleteEvent(eventId) {
     try {
         const conn = await db();
-        return await conn.collection('events').deleteOne({ _id: new ObjectId(eventId) });
+        return await conn.collection('Events').deleteOne({ _id: new ObjectId(eventId) });
     } catch (error) {
         console.error('Mongo query error deleteEvent:', error);
         throw error;
     }
 }
 
-module.exports = { getEventById, getEventsAll, getUsersEvent, CreateEvent, updateEvent, deleteEvent };
+async function AddUserToEvent(event_id, user_id){
+    try {
+        const conn = await db();
+        const result = await conn.collection('Events').updateOne(
+            {_id: new ObjectId(event_id)},
+            {$addToSet : {participants : new ObjectId(user_id)}}
+        );
+        console.log(result);
+        return (result);
+    } catch (error) {
+        console.error('Mongo query error AddUserToEvent', error);
+    }
+}
+
+module.exports = { getEventById, getEventsAll, getUsersEvent, CreateEvent, updateEvent, deleteEvent , AddUserToEvent };

@@ -10,6 +10,7 @@ const Home_page = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [eventPictures, setEventPictures] = useState<string[]>([]);
   const [isEventExpanded, setIsEventExpanded] = useState(false);
+  const [eventId , setEventId] = useState("");
   const [eventDate, setEventDate] = useState(""); // A faire et ajouter type
   const [eventDescription, setEventDescription] = useState("");
   const [eventTitle, setEventTitle] = useState("");
@@ -75,6 +76,7 @@ const Home_page = () => {
 
       if (filteredEvents.length > 0) {
         const firstEvent = filteredEvents[0];
+        setEventId(firstEvent._id);
         setEventPictures(firstEvent.photos || []);
         setEventDate(firstEvent.date);
         setEventDescription(firstEvent.description);
@@ -101,7 +103,7 @@ const Home_page = () => {
     if (events_city.length === 0) return;
 
     const currentEvent = events_city[eventIndex];
-
+    setEventId(currentEvent._id);
     setEventPictures(currentEvent.photos);
     setEventDate(currentEvent.date);
     setEventDescription(currentEvent.description);
@@ -115,6 +117,7 @@ const Home_page = () => {
     const nextIndex = eventIndex === events_city.length - 1 ? 0 : eventIndex + 1;
     const nextEvent = events_city[nextIndex];
     if (nextEvent) {
+      setEventId(nextEvent._id);
       setNextEventPictures(nextEvent.photos || []);
       setNextEventDate(nextEvent.date);
       setNextEventDescription(nextEvent.description);
@@ -122,7 +125,19 @@ const Home_page = () => {
     }
   }, [events_city, eventIndex]);
 
+  async function AddUserToEvent(){
+     const token = localStorage.getItem("token");
+     try {
+       const data = await axios.get(`http://localhost:3000/user`, { headers: { 'Authorization': `Bearer ${token}` } });
+       const UserId = data.data._id;
+       console.log(UserId);
+       console.log(eventId);
+      await axios.post(`http://localhost:3000/add_user_to_event`,{event_id : eventId , user_id : UserId} ,{ headers: { 'Authorization': `Bearer ${token}` } });
+    } catch (err: any) {
+      console.error(err);
 
+    }
+  }
 
   const handleEventClick = () => {
     setCurrentImageIndex((prev) => prev === totalImages - 1 ? 0 : prev + 1);
@@ -139,7 +154,10 @@ const Home_page = () => {
     if ('touches' in e) {
       setSwipeStart(e.touches[0].clientX);
     } else {
+      // Empêcher le comportement de drag d'image natif du navigateur (souris seulement)
+      e.preventDefault();
       setSwipeStart(e.clientX);
+      setIsDragging(true);
     }
   };
 
@@ -150,6 +168,14 @@ const Home_page = () => {
     if ('touches' in e) {
       currentX = e.touches[0].clientX;
     } else {
+      // Sur PC, vérifier que le bouton de la souris est toujours appuyé
+      if (!('buttons' in e) || e.buttons !== 1) {
+        return;
+      }
+      // Empêcher le comportement par défaut pendant le drag (souris seulement)
+      if (isDragging) {
+        e.preventDefault();
+      }
       currentX = e.clientX;
     }
 
@@ -196,6 +222,7 @@ const Home_page = () => {
         setSwipeDirection('right');
         setTimeout(() => {
           ChangeEventClick();
+          AddUserToEvent();
           setSwipeDirection(null);
           setGestureLocked(false); // Déverrouiller après l'animation
         }, 400);
@@ -214,7 +241,7 @@ const Home_page = () => {
             <div className="header_container">
               <h1 className="title_home">cherry</h1>
               <div className="top_right_icons">
-                <div onClick={() => navigate("/create-event")} style={{ cursor: 'pointer' }}>
+                <div className="plus_image" onClick={() => navigate("/create-event")} style={{ cursor: 'pointer' }}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon_plus">
                     <path d="M5 12h14" />
                     <path d="M12 5v14" />
@@ -270,24 +297,27 @@ const Home_page = () => {
                 transition: swipeDirection ? 'opacity 0.5s ease-out' : 'none'
               }}
             >
-              <div className="indice_image">
-                {nextEventPictures.map((_, index) => (
-                  <div
-                    key={index}
-                    className={`indice_bar ${index === 0 ? 'active' : ''}`}
-                    style={{ width: `calc((90vw - ${(nextEventPictures.length - 1) * 8}px) / ${nextEventPictures.length})`, maxWidth: `${320 / nextEventPictures.length}px` }}
-                  >
-                  </div>
-                ))}
-              </div>
-
               <div className="event_info_container">
+                <div className={`indice_image ${isDragging ? 'hidden' : ''}`}>
+                  {nextEventPictures.map((_, index) => (
+                    <div
+                      key={index}
+                      className={`indice_bar ${index === 0 ? 'active' : ''}`}
+                      style={{ width: `calc((90vw - ${(nextEventPictures.length - 1) * 8}px) / ${nextEventPictures.length})`, maxWidth: `${320 / nextEventPictures.length}px` }}
+                    >
+                    </div>
+                  ))}
+                </div>
+
                 <div className="event_date">
                   <h2>{nextEventDate.substring(8, 10)} {monthNames[parseInt(nextEventDate.substring(5, 7)) - 1]} {nextEventDate.substring(0, 4)}</h2>
                 </div>
                 <div className="event_info">
                   <h2 className="event_title">{nextEventTitle}</h2>
                   <p className="event_description">{nextEventDescription}</p>
+                  <div className="icon_details">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-move-up-icon lucide-move-up"><path d="M8 6L12 2L16 6" /><path d="M12 2V22" /></svg>
+                  </div>
                 </div>
               </div>
 
@@ -295,6 +325,8 @@ const Home_page = () => {
                 className="event_img"
                 src={nextEventPictures[0]}
                 alt="Next event"
+                draggable={false}
+                onDragStart={(e) => e.preventDefault()}
                 style={{ cursor: 'grab', userSelect: 'none' }}
               />
             </div>
@@ -309,6 +341,7 @@ const Home_page = () => {
             onMouseDown={handleSwipeStart}
             onMouseUp={handleSwipeEnd}
             onMouseMove={handleSwipeMove}
+            onMouseLeave={handleSwipeEnd}
             style={{
               transform: isDragging && !swipeDirection ? `translateX(${dragX}px) rotate(${dragX / 10}deg)` : 'none',
               transition: isDragging ? 'none' : 'transform 0.3s ease'
@@ -349,18 +382,20 @@ const Home_page = () => {
               className={`event_img ${swipeDirection === 'left' ? 'swipe-left' : swipeDirection === 'right' ? 'swipe-right' : ''}`}
               src={eventPictures[currentImageIndex]}
               alt="Event in your area"
-              style={{ cursor: 'grab', userSelect: 'none' }}
+              draggable={false}
+              onDragStart={(e) => e.preventDefault()}
+              style={{ cursor: isDragging ? 'grabbing' : 'grab', userSelect: 'none' }}
             />
           </div>
 
           {/* Icônes de swipe en dehors de l'image */}
           {!isEventExpanded && isDragging && (
             <div className="swipe-icons-overlay">
-              {dragX > 50 ? (
+              {dragX > 100 ? (
                 <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="#FF9FC9" stroke="#FF9FC9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="swipe-icon">
                   <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
                 </svg>
-              ) : dragX < -50 ? (
+              ) : dragX < -100 ? (
                 <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="swipe-icon">
                   <line x1="18" y1="6" x2="6" y2="18"></line>
                   <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -415,7 +450,7 @@ const Home_page = () => {
           <div className="header_container">
             <h1 className="title_home">cherry</h1>
             <div className="top_right_icons">
-              <div onClick={() => navigate("/create-event")} style={{ cursor: 'pointer' }}>
+              <div className="plus_image" onClick={() => navigate("/create-event")} style={{ cursor: 'pointer' }}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon_plus" >
                   <path d="M5 12h14" />
                   <path d="M12 5v14" />

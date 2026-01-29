@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const eventQuery = require('../Event/event.query');
-const { getEventById, getEventsAll, getUsersEvent, CreateEvent, updateEvent, deleteEvent} = require('../Event/event.query');
+const { getEventById, getEventsAll, getUsersEvent, CreateEvent, updateEvent, deleteEvent , AddUserToEvent} = require('../Event/event.query');
 const auth = require ("../../middelware/auth");
+const { ObjectId } = require('mongodb');
 
 // affiche les listes des events (page d'accueil des events)
 router.get('/events', auth ,async (req, res) => {
@@ -91,6 +92,17 @@ router.delete('/events/:id', async (req, res) => {
     }
 });
 
+router.post('/add_user_to_event', auth , async (req , res) => {
+    const event_id = req.body.event_id;
+    const user_id = req.body.user_id;
+    
+    try {
+        const result = await AddUserToEvent(event_id, user_id);
+        res.status(200).json({ message : 'User added to the event'});
+    } catch (error){
+        res.status(500).json({message : 'Fail to add the user to the event'});
+    }
+})
 
 
 module.exports = router;
