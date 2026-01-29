@@ -6,105 +6,87 @@ import { useNavigate } from "react-router-dom";
 
 const Home_page = () => {
   const navigate = useNavigate();
-  const [eventIndex, setEventIndex] = useState(0);
+
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [eventPictures, setEventPictures] = useState<string[]>([]);
   const [isEventExpanded, setIsEventExpanded] = useState(false);
-  const [eventId , setEventId] = useState("");
-  const [eventDate, setEventDate] = useState(""); // A faire et ajouter type
+  const [eventDate, setEventDate] = useState("");
   const [eventDescription, setEventDescription] = useState("");
   const [eventTitle, setEventTitle] = useState("");
   const [eventNbParticipants, setEventNbParticipants] = useState(0);
   const [eventNbMaxParticipants, setEventNbMaxParticipants] = useState(0);
+  const [UserId, setUserId] = useState("");
   const [eventAge, setEventAge] = useState(0);
   const [loading, setLoading] = useState(false);
+
   const totalImages = eventPictures.length;
   const [events_city, setEvents_city] = useState<any[]>([]);
+
   const [swipeStart, setSwipeStart] = useState<number | null>(null);
   const [swipeDirection, setSwipeDirection] = useState<'left' | 'right' | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [dragX, setDragX] = useState(0);
   const [gestureLocked, setGestureLocked] = useState(false);
   const imageRef = useRef<HTMLImageElement>(null);
-  
+
   const [nextEventPictures, setNextEventPictures] = useState<string[]>([]);
   const [nextEventDate, setNextEventDate] = useState("");
   const [nextEventDescription, setNextEventDescription] = useState("");
   const [nextEventTitle, setNextEventTitle] = useState("");
 
+  const currentEvent = events_city[0];
+  const nextEvent = events_city[1];
+
   const monthNames = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
+    "January","February","March","April","May","June",
+    "July","August","September","October","November","December"
   ];
 
-  // Mettre en useState
-  let events = [];
-
-  // Pour tel en attendant deploiement backend
-  const mockEventPictures = [
-    "https://i.postimg.cc/hG3HmsBy/IMG-0390.jpg",
-    "https://i.postimg.cc/V63hqSQ3/Full-Size-Render.jpg",
-    "https://i.postimg.cc/3wKLV3QQ/IMG-6320.jpg"
-  ];
+  let events: any[] = [];
 
   async function event_loading() {
-    // event.preventDefault();
-
     const token = localStorage.getItem("token");
 
     try {
-      const response_events = await axios.get(`http://localhost:3000/events`, { headers: { 'Authorization': `Bearer ${token}` } });
+      const response_events = await axios.get(
+        `http://localhost:3000/events`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
       events = response_events.data;
-      const data = await axios.get(`http://localhost:3000/user`, { headers: { 'Authorization': `Bearer ${token}` } });
-      let city_user = data.data.city;
 
-      const verifEvent = (event: any, cityUser: string, userId: string) => {
-        if (event.city !== cityUser) {
-          return false;
-        }
-
-        if (event.participants.includes(userId)) {
-          return false;
-        }
-        return true;
-      };
+      const data = await axios.get(
+        `http://localhost:3000/user`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
 
       const userId = data.data._id;
-      const filteredEvents = events.filter((event: any) => verifEvent(event, city_user, userId));
+      setUserId(userId);
+      const city_user = data.data.city;
+
+      const filteredEvents = events.filter(
+        (event: any) =>
+          event.city === city_user &&
+          !event.participants.includes(userId)
+      );
 
       setEvents_city(filteredEvents);
 
-      if (filteredEvents.length > 0) {
-        const firstEvent = filteredEvents[0];
-        setEventId(firstEvent._id);
-        setEventPictures(firstEvent.photos || []);
-        setEventDate(firstEvent.date);
-        setEventDescription(firstEvent.description);
-        setEventTitle(firstEvent.title);
-        setEventNbParticipants(firstEvent.nbParticipants);
-        setEventNbMaxParticipants(firstEvent.nbMax);
-        setEventAge(firstEvent.ageMin);
-      } else {
+      if (filteredEvents.length === 0) {
         setLoading(true);
       }
-
-
-    } catch (err: any) {
+    } catch (err) {
       console.error(err);
-
     }
-    return (eventPictures);
   }
+
   useEffect(() => {
     event_loading();
   }, []);
 
   useEffect(() => {
-    if (events_city.length === 0) return;
+    if (!currentEvent) return;
 
-    const currentEvent = events_city[eventIndex];
-    setEventId(currentEvent._id);
-    setEventPictures(currentEvent.photos);
+    setEventPictures(currentEvent.photos || []);
     setEventDate(currentEvent.date);
     setEventDescription(currentEvent.description);
     setEventTitle(currentEvent.title);
@@ -112,127 +94,101 @@ const Home_page = () => {
     setEventNbMaxParticipants(currentEvent.nbMax);
     setEventAge(currentEvent.ageMin);
     setCurrentImageIndex(0);
-    
-    // Charger le prochain événement
-    const nextIndex = eventIndex === events_city.length - 1 ? 0 : eventIndex + 1;
-    const nextEvent = events_city[nextIndex];
+
     if (nextEvent) {
-      setEventId(nextEvent._id);
       setNextEventPictures(nextEvent.photos || []);
       setNextEventDate(nextEvent.date);
       setNextEventDescription(nextEvent.description);
       setNextEventTitle(nextEvent.title);
+    } else {
+      setNextEventPictures([]);
     }
-  }, [events_city, eventIndex]);
+  }, [events_city]);
 
-  async function AddUserToEvent(){
-     const token = localStorage.getItem("token");
-     try {
-       const data = await axios.get(`http://localhost:3000/user`, { headers: { 'Authorization': `Bearer ${token}` } });
-       const UserId = data.data._id;
-       console.log(UserId);
-       console.log(eventId);
-      await axios.post(`http://localhost:3000/add_user_to_event`,{event_id : eventId , user_id : UserId} ,{ headers: { 'Authorization': `Bearer ${token}` } });
-    } catch (err: any) {
+  async function AddUserToEvent() {
+    if (!currentEvent) return;
+
+    const token = localStorage.getItem("token");
+
+    try {
+      await axios.post(
+        `http://localhost:3000/add_user_to_event`,
+        { event_id: currentEvent._id, user_id: UserId },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      setEvents_city(prev => {
+        const newEvents = prev.slice(1); 
+
+        if (newEvents.length === 0) {
+          setLoading(true);
+        }
+
+        return newEvents;
+      });
+    } catch (err) {
       console.error(err);
-
     }
   }
 
   const handleEventClick = () => {
-    setCurrentImageIndex((prev) => prev === totalImages - 1 ? 0 : prev + 1);
+    setCurrentImageIndex(prev =>
+      prev === totalImages - 1 ? 0 : prev + 1
+    );
   };
 
-  const ChangeEventClick = () => {
-    setEventIndex((prev) => prev === events_city.length - 1 ? 0 : prev + 1);
-  };
-
-  const handleSwipeStart = (e: React.TouchEvent<HTMLDivElement> | React.MouseEvent<HTMLDivElement>) => {
-    // Désactiver les interactions pendant l'animation de swipe ou si geste verrouillé
+  const handleSwipeStart = (e: any) => {
     if (isEventExpanded || swipeDirection || gestureLocked) return;
 
-    if ('touches' in e) {
-      setSwipeStart(e.touches[0].clientX);
-    } else {
-      // Empêcher le comportement de drag d'image natif du navigateur (souris seulement)
-      e.preventDefault();
-      setSwipeStart(e.clientX);
-      setIsDragging(true);
-    }
+    setSwipeStart('touches' in e ? e.touches[0].clientX : e.clientX);
+    if (!('touches' in e)) setIsDragging(true);
   };
 
-  const handleSwipeMove = (e: React.TouchEvent<HTMLDivElement> | React.MouseEvent<HTMLDivElement>) => {
+  const handleSwipeMove = (e: any) => {
     if (swipeStart === null) return;
-
-    let currentX = 0;
-    if ('touches' in e) {
-      currentX = e.touches[0].clientX;
-    } else {
-      // Sur PC, vérifier que le bouton de la souris est toujours appuyé
-      if (!('buttons' in e) || e.buttons !== 1) {
-        return;
-      }
-      // Empêcher le comportement par défaut pendant le drag (souris seulement)
-      if (isDragging) {
-        e.preventDefault();
-      }
-      currentX = e.clientX;
-    }
-
+    const currentX = 'touches' in e ? e.touches[0].clientX : e.clientX;
     const diff = swipeStart - currentX;
-
-    // Ne commence à drag que si le mouvement est significatif (> 5px)
     if (Math.abs(diff) > 5) {
       setIsDragging(true);
       setDragX(-diff);
     }
   };
 
-  const handleSwipeEnd = (e: React.TouchEvent<HTMLDivElement> | React.MouseEvent<HTMLDivElement>) => {
+  const handleSwipeEnd = (e: any) => {
     if (isEventExpanded || swipeStart === null || swipeDirection || gestureLocked) return;
 
-    let endX = 0;
-    if ('changedTouches' in e) {
-      endX = e.changedTouches[0].clientX;
-    } else {
-      endX = e.clientX;
-    }
-
+    const endX = 'changedTouches' in e ? e.changedTouches[0].clientX : e.clientX;
     const diff = swipeStart - endX;
-    const swipeThreshold = 150;
 
-    // Réinitialiser IMMÉDIATEMENT tous les états pour oublier la position du touch/clic
     setSwipeStart(null);
     setIsDragging(false);
     setDragX(0);
-    setGestureLocked(true); // Verrouiller pour éviter les faux swipes sur le prochain événement
+    setGestureLocked(true);
 
-    if (Math.abs(diff) > swipeThreshold) {
+    if (Math.abs(diff) > 150) {
       if (diff > 0) {
-        // On ajoute l'image swipe right dans les likes
-        // On l'enleve des evenements qui reviennent dans la page d'acceuil
         setSwipeDirection('left');
         setTimeout(() => {
-          ChangeEventClick();
+          setEvents_city(prev => {
+            if (prev.length <= 1) return prev;
+            const [first, ...rest] = prev;
+            return [...rest, first];
+          });
           setSwipeDirection(null);
-          setGestureLocked(false); // Déverrouiller après l'animation
+          setGestureLocked(false);
         }, 400);
       } else {
-        // On le laisse dans les evenements qui reviennent dans la page d'acceuil
         setSwipeDirection('right');
+        AddUserToEvent();
         setTimeout(() => {
-          ChangeEventClick();
-          AddUserToEvent();
           setSwipeDirection(null);
-          setGestureLocked(false); // Déverrouiller après l'animation
+          setGestureLocked(false);
         }, 400);
       }
     } else {
-      // Si pas de swipe valide, déverrouiller immédiatement
       setGestureLocked(false);
     }
   };
-
   return (
     <>
       {!loading && (
