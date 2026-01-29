@@ -5,11 +5,10 @@ import Main from './pages/Auth/Main';
 import MessagePreview from "./pages/Chat/messagePreview";   
 import Home from './pages/Home/Home_page'; 
 import Profile from "./pages/Profile/Profile_page";
+import CreateEvent from "./components/CreateEvent/CreateEvent";
 import MessageView from "./pages/Chat/messageView";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './App.css';
-import CreateEvent from "./components/CreateEvent/CreateEvent";
-
     
 
 function App() {
