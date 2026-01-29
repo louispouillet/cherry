@@ -1,7 +1,7 @@
 const express = require('express');
 const auth = require('../../middelware/auth');
 const router = express.Router();
-const { getUserById, getUserByPhone, deleteUser } = require('./users.query');
+const { getUserById, getUserByPhone, deleteUser, updateUserCity } = require('./users.query');
 
 // (account bouton) Route pour voir les informations d'un user
 router.get('/user', auth, async (req, res) => {
@@ -49,7 +49,7 @@ router.get('/user', auth, async (req, res) => {
   try {
     let user;
 
-      user = await getUserById(value);
+    user = await getUserById(value);
 
     if (!user || user.length === 0)
       return res.status(404).json({ msg: "Not found" });
@@ -60,6 +60,27 @@ router.get('/user', auth, async (req, res) => {
   }
 });
 
+// Route pour modifier les informations d'un user (pour l'instant que la ville)
+router.put('/user', auth, async (req, res) => {
+  const value = req.payload.id;
+  const { city } = req.body;
+
+  try {
+    let user;
+
+    user = await getUserById(value);
+
+    if (!user || user.length === 0){
+      return res.status(404).json({ msg: "User not found" });
+    }
+
+    await updateUserCity(value, city);
+
+    res.json({ msg: "User updated successfully", user });
+  } catch (err) {
+    res.status(500).json({ msg: "Internal server error" });
+  }
+});
 
 
 
