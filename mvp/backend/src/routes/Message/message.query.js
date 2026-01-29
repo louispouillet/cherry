@@ -3,7 +3,6 @@ const { ObjectId } = require("mongodb");
 
 async function getMessagePreview(id) {
   try {
-    if (!id) throw new Error("id is required");
     const conn = await db();
     const response = await conn
       .collection("Events")
@@ -33,7 +32,7 @@ async function getGroupInfoById(groupId) {
   return response;
 }
 
-async function getMessageByGroupId(groupId) {
+async function getMessageByGroupId(groupId, userId) {
   const conn = await db();
   const messages = await conn.collection("Messages").aggregate([
     {
@@ -51,7 +50,7 @@ async function getMessageByGroupId(groupId) {
       $unwind: "$authorDetails"
     },
     {
-      $sort: { sentAt: 1 }
+      $sort: { sentAt: -1 }
     },
     {
       $project: {
@@ -59,13 +58,24 @@ async function getMessageByGroupId(groupId) {
         content: 1,
         sentAt: 1,
         userId: 1,
-        test: "$authorDetails",
         userName: "$authorDetails.firstname",
-        userPicture: "$authorDetails.picture"
+        userPicture: "$authorDetails.picture",
+        isMe: { $eq: ["$userId", new ObjectId(userId)] }
       }
     }
   ]).toArray();
   return messages;
 }
 
-module.exports = { getMessageByGroupId, getMessagePreview, getGroupInfoById };
+async function sendMessageByGroupId(groupId, userId, content) {
+  const conn = await db();
+  const result = await conn.collection("Messages").insertOne({
+    groupId: new ObjectId(groupId),
+    userId: new ObjectId(userId),
+    content: content,
+    sentAt: new Date()
+  });
+  return result;
+}
+
+module.exports = { getMessageByGroupId, getMessagePreview, getGroupInfoById, sendMessageByGroupId };

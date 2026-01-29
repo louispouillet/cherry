@@ -56,33 +56,33 @@ const messagePreview = () => {
 
   return (
     <>
-      <div className="header">
-        <div className="firstLine">
-          <div className="title">Message</div>
-          <CreateEvent />
+      <div className="messagePreviewHeader">
+        <div className="messagePreviewFirstLine">
+          <div className="messagePreviewTitle">Message</div>
+          {/* <CreateEvent /> */}
         </div>
-        <div className="secondLine">
+        <div className="messagePreviewSecondLine">
           <SearchBar />
         </div>
       </div>
       <div className="messagePreviewContainer">
         {events.map((event: any) => (
           <div
-            className="messageBlock"
+            className="messagePreviewMessageBlock"
             key={event._id}
             onClick={() => navigate(`/message/${event._id}`)}
           >
-            <img className="eventPicture" src={event.photo} alt="Event photo" />
-            <div className="eventDetails">
-              <div className="eventHeader">
-                <div className="eventTitle">{event.title}</div>
-                <div className="eventSendAgo">
+            <img className="messagePreviewEventPicture" src={event.photo} alt="Event photo" />
+            <div className="messagePreviewEventDetails">
+              <div className="messagePreviewEventHeader">
+                <div className="messagePreviewEventTitle">{event.title}</div>
+                <div className="messagePreviewEventSendAgo">
                   {formatShortAgo(new Date(event.sentAt))}
                 </div>
               </div>
-              <div className="eventText">
-                <div className="eventSenderName">{event.senderName}:</div>
-                <div className="eventContent">{event.content}</div>
+              <div className="messagePreviewEventText">
+                <div className="messagePreviewEventSenderName">{event.senderName}:</div>
+                <div className="messagePreviewEventContent">{event.content}</div>
               </div>
             </div>
           </div>
