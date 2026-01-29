@@ -324,6 +324,10 @@ body {
     padding-top: 0.8vh;
 }
 
+.filter_image{
+    padding-bottom: 2vh;
+}
+
 .detail_item {
     background-color: #faf0e6;
     padding: 16px 20px;
