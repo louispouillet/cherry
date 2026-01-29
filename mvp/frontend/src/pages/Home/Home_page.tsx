@@ -427,7 +427,7 @@ const Home_page = () => {
           </div>
           <div className="logo_home">
             <img src="https://raw.githubusercontent.com/LoucheVDC/Assets/main/cherry.png" alt="logo" />
-            <h3> No event in your area ! Loading ...</h3>
+            <h3> No event in your area for the moment ! Come back later !</h3>
           </div>
         </div>
       )}

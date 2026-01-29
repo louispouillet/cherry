@@ -1,9 +1,9 @@
 #root {
-  min-height: 100vh ;
-  overflow: auto ;
+  min-height: 100vh;
+  overflow: auto;
 }
 
-.header {
+.messagePreviewHeader {
   display: flex;
   flex-direction: column;
   padding: 0 4vw;
@@ -11,7 +11,7 @@
   gap: 2vh;
 }
 
-.firstLine {
+.messagePreviewFirstLine {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -19,7 +19,7 @@
   z-index: 10;
 }
 
-.title {
+.messagePreviewTitle {
   font-size: 2.5rem;
   font-weight: bold;
   color: #333;
@@ -33,14 +33,14 @@
   color: #333;
 }
 
-.messageBlock {
+.messagePreviewMessageBlock {
   display: flex;
   align-items: center;
   gap: 15px;
   min-width: 0;
 }
 
-.eventPicture {
+.messagePreviewEventPicture {
   width: 80px;
   height: 80px;
   border-radius: 50%;
@@ -50,7 +50,7 @@
   flex: 0 0 80px;
 }
 
-.eventDetails {
+.messagePreviewEventDetails {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -58,14 +58,14 @@
   min-width: 0;
 }
 
-.eventText {
+.messagePreviewEventText {
   display: flex;
   align-items: center;
   flex-wrap: nowrap;
   gap: 5px;
 }
 
-.eventSendAgo {
+.messagePreviewEventSendAgo {
   display: flex;
   align-items: center;
   flex: 0 0 auto;
@@ -73,13 +73,13 @@
   margin-left: 8px;
 }
 
-.eventHeader {
+.messagePreviewEventHeader {
   display: flex;
   gap: 10px;
   align-items: center;
 }
 
-.eventTitle {
+.messagePreviewEventTitle {
   text-align: start;
   font-size: 1.5rem;
   font-weight: bold;
@@ -91,12 +91,12 @@
   text-overflow: ellipsis;
 }
 
-.eventSenderName {
+.messagePreviewEventSenderName {
   flex: 0 0 auto;
   white-space: nowrap;
 }
 
-.eventContent {
+.messagePreviewEventContent {
   min-width: 0;
   white-space: nowrap;
   overflow: hidden;

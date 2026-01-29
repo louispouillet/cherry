@@ -14,8 +14,6 @@ async function getUserById(id) {
     }
 };
 
-
-
 async function getAllUsers() {
     try {
         const conn = await db();
@@ -47,4 +45,17 @@ async function deleteUser(id) {
     }
 }
 
-module.exports = { getUserById, getUserByPhone, deleteUser };
+async function updateUserCity(id, newCity) {
+    try {
+        const conn = await db();
+        return await conn.collection("Users").updateOne(
+            { _id: new ObjectId(id) },
+            { $set: { city: newCity } }
+        );
+    } catch (err) {
+        console.error('Mongo query error updateUserCity : ', err);
+        throw (err);
+    }
+};
+
+module.exports = { getUserById, getUserByPhone, deleteUser, updateUserCity };
