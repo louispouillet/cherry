@@ -27,7 +27,7 @@ export const setupAxiosInterceptors = (navigate: (path: string) => void) => {
     (error) => {
       // Si l'erreur est 401 (Unauthorized), le token est invalide
       if (error.response?.status === 401) {
-        console.warn('Token invalide ou expiré, redirection vers login');
+        console.warn('Token invalid or expired, redirecting to login');
         localStorage.removeItem('token');
         navigate('/login');
       }

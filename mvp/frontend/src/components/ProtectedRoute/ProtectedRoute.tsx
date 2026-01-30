@@ -29,7 +29,7 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
         });
         setIsAuthenticated(true);
       } catch (error) {
-        console.error('Token invalide:', error);
+        console.error('Token invalid:', error);
         localStorage.removeItem('token');
         setIsAuthenticated(false);
       }
