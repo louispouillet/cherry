@@ -169,11 +169,25 @@
 .next-event .event_date {
     background-color: rgba(255, 255, 255, 0.199);
     position: absolute;
-    top: 3vh;
-    right: 2vh;
-    padding: 10px 8px;
+    top: 4vh;
+    right: 4vw;
     border-radius: 10px;
+    padding: 0 2vw 0 2vw;
     z-index: 15;
+}
+
+/* Tablette */
+@media (min-width: 768px) {
+    .next-event .event_date {
+        right: 6vw;
+    }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+    .next-event .event_date {
+        right: 8vw;
+    }
 }
 
 .next-event .event_info {
@@ -244,11 +258,25 @@
 .event_date {
     background-color: rgba(255, 255, 255, 0.199);
     position: absolute;
-    top: 3vh;
-    right: 2vh;
-    padding: 10px 8px;
+    top: 4vh;
+    right: 4vw;
     border-radius: 10px;
+    padding: 0 2vw 0 2vw;
     z-index: 15;
+}
+
+/* Tablette */
+@media (min-width: 640px) {
+    .event_date {
+        right: 7vw;
+    }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+    .event_date {
+        right: 8vw;
+    }
 }
 
 .event_info {

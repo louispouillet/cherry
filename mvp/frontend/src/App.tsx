@@ -5,7 +5,7 @@ import Main from './pages/Auth/Main';
 import MessagePreview from "./pages/Chat/messagePreview";
 import Home from './pages/Home/Home_page';
 import Profile from "./pages/Profile/Profile_page";
-import CreateEvent from "./components/CreateEvent/CreateEvent";
+import CreateEvent from "./pages/CreateEvent/CreateEvent";
 import MessageView from "./pages/Chat/messageView";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";

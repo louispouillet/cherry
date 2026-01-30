@@ -1,7 +1,7 @@
 import axios from "axios";
 import "./messagePreview.css";
 import NavBar from "../../components/NavBar/NavBar";
-import CreateEvent from "../../components/CreateEvent/CreateEvent";
+import CreateEvent from "../CreateEvent/CreateEvent";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
