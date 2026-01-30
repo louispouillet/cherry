@@ -59,7 +59,7 @@ const messagePreview = () => {
       <div className="messagePreviewHeader">
         <div className="messagePreviewFirstLine">
           <div className="messagePreviewTitle">Message</div>
-          {/* <CreateEvent /> */}
+          <svg onClick={() => navigate("/create-event")} style={{ cursor: 'pointer' }} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="plusIcon"><path d="M5 12h14" /><path d="M12 5v14" /></svg>
         </div>
         <div className="messagePreviewSecondLine">
           <SearchBar />

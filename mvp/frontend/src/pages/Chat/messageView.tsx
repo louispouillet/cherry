@@ -43,7 +43,7 @@ const messageView = () => {
             if (inputValue.trim().length === 0) {
                 return;
             }
-            const response = await axios.post(`http://localhost:3000/sendMessage/${groupId}`, {
+            await axios.post(`http://localhost:3000/sendMessage/${groupId}`, {
                 content: inputValue,
             }, {
                 headers: {
@@ -69,7 +69,7 @@ const messageView = () => {
     return (
         <div className="viewPageContainer"> 
             <div className="messageViewHeader">
-                <svg onClick={() => navigate(-1)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="backArrow lucide lucide-chevron-left-icon lucide-chevron-left"><path d="m15 18-6-6 6-6"/></svg>
+                <svg onClick={() => navigate(-1)} style={{ cursor: 'pointer' }} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="backArrow lucide lucide-chevron-left-icon lucide-chevron-left"><path d="m15 18-6-6 6-6"/></svg>
                 <div className="eventInfo" onClick={() => navigate(-1)}>
                     <img className="eventPicture" src={groupInfo.photo} alt={`${groupInfo.title} Photo`} />
                     <div className="eventTitle">{groupInfo.title}</div>
@@ -82,43 +82,22 @@ const messageView = () => {
             </div>
             <div className="messageViewContainer">
                 {messages.map((message, index) => {
-                    const isTheSameAsPrevious = index > 0 && messages[index - 1].userId === message.userId;
-                    const isWithinADay = index > 0 && new Date(messages[index - 1].sentAt).getTime() - new Date(message.sentAt).getTime() < 86400000;
-                    console.log(index , message.content , isWithinADay ,message.sentAt);
+                    // const isTheSameAsPrevious = index > 0 && messages[index - 1].userId === message.userId;
+                    // const isWithin24H = index > 0 &&  new Date(message.sentAt).getTime() - new Date(messages[index - 1].sentAt).getTime() < 86400000;
+                    const isMe = message.isMe;
+
                     return (
-                        <div key={message._id}>
-                            {message.isMe === false && (
-                                <>  
-                                    {!isWithinADay &&(
-                                        <div className="messageDate">{new Date(message.sentAt).toLocaleString()}</div>
-                                    )}
-                                    <div className="messageLeft">
-                                        {(!isTheSameAsPrevious || (isWithinADay)) && (
-                                            <>
-                                                <div className="userPicture"><img src={message.userPicture} alt={`${message.userName} Picture`} /></div>
-                                            </>
-                                        )}
-                                        <div className="message">
-                                            {!isTheSameAsPrevious && (
-                                                <>
-                                                    <div className="userName">{message.userName}</div>
-                                                </>
-                                            )}
-                                            <div className="messageContent">{message.content}</div>
-                                        </div>
-                                    </div>
-                                </>
-                            )}
-                            {message.isMe === true && (
-                                <>  
-                                    {!isWithinADay &&(
-                                        <div className="messageDate">{new Date(message.sentAt).toLocaleString()}</div>
-                                    )}                                        
-                                    <div className="messageRight">
-                                        <div className="messageContent">{message.content}</div>
-                                    </div>
-                                </>
-                            )}
+                        <div key={message._id} className={isMe ? "messageRight" : "messageLeft"}>
+                            <div className="messageDate">{new Date(message.sentAt).toLocaleString()}</div>
+                            <div className="messageBlock">
+                                {!isMe && (
+                                    <>
+                                        <img className="userPicture" src={message.userPicture} alt={`${message.userName} Picture`} />
+                                        <div className="userName">{message.userName}</div>
+                                    </>
+                                )}
+                                <div className={isMe ? "messageContentRight" : "messageContentLeft"}>{message.content}</div>
+                            </div>
                         </div>
                     );
                 })}

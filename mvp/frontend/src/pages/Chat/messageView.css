@@ -9,11 +9,12 @@
   top: 0;
   left: 0;
   z-index: 1;
-  height: 10vh;
+  height: 9vh;
   width: 100vw;
   display: flex;
-  align-items: center;
-  background: rgba(255, 255, 255, 0.85);
+  align-items: end;
+  padding-bottom: 1vh;
+  background: #faebd7;
   -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
   box-shadow:
@@ -22,37 +23,84 @@
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 
+.eventInfo {
+  display: flex;
+  align-items: center;
+  gap: 2vw;
+  cursor: pointer;
+}
+
+.eventPicture {
+  width: 5vh;
+  height: 5vh;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  flex: 0 0 5vh;
+}
+
+.eventTitle {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.backArrow {
+  color: black;
+  height: 5vh;
+}
+
+.forwardArrow {
+  color: rgb(117, 117, 117);
+  width: 2vh;
+}
+
+
 
 
 .messageViewContainer {
-  padding: 0 2vh 18vh 2vh;
-  width: 100vw;
+  position: absolute;
+  z-index: 0;
+  top: 10vh;
+  bottom: 12vh;
+  left: 0;
+  right: 0;
+  padding: 2vh;
+  padding-bottom: 7vh;
+
   display: flex;
   flex-direction: column-reverse;
   gap: 2vh;
   color: #333;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .messageLeft {
   display: flex;
-  align-items: end;
-  gap: 2vh;
+  flex-direction: column;
+  gap: 1.5vh;
 }
 
 .messageRight {
   display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 2vh;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1.5vh;
 }
 
-.messageHeader {
+.messageDate {
   display: flex;
+  justify-content: center;
+  width: 100%;
+  font-size: 0.8rem;
+  color: #999;
 }
 
 .userPicture {
-  width: 40px;
-  height: 40px;
+  width: 4.5vh;
+  height: 4.5vh;
   border-radius: 50%;
   object-fit: cover;
   object-position: center;
@@ -60,70 +108,42 @@
 }
 
 .userName {
-  margin-left: 10px;
   font-size: 1rem;
   color: #747474;
 }
 
-.messageDate {
 
+.messageBlock {
+  display: flex;
+  align-items: center;
+  gap: 1vh;
 }
 
-.messageContent {
-  max-width: 60vw;
-  padding: 1vh 2vh;
-  border-radius: 1vh;
-  font-size: 1.3rem;
-  line-height: 1.4;
-  background-color: azure;
-}
-
-
-.messageContent {
+.messageContentRight, .messageContentLeft {
   box-sizing: border-box;
   white-space: normal;
   overflow-wrap: anywhere;
   word-wrap: break-word;
   word-break: break-word;
   hyphens: auto;
+  max-width: 60vw;
+  padding: 1vh 2vh;
+  border-radius: 25px;
+  font-size: 1.3rem;
+  line-height: 1.4;
 }
 
-.eventInfo {
-  display: flex;
-  align-items: center;
-  gap: 2vh;
-  margin-left: 2vh;
-  cursor: pointer;
+.messageContentRight {
+  background-color: #FF9FC9;
 }
 
-.eventPicture {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  object-fit: cover;
-  object-position: center;
-  display: block;
-  flex: 0 0 80px;
-}
-
-.eventTitle {
-  font-size: 2rem;
-  font-weight: bold;
-  color: #333;
-}
-
-.backArrow {
-  color: black;
-  width: 6vh;
-}
-
-.forwardArrow {
-  color: black;
-  width: 4vh;
+.messageContentLeft {
+  background-color: rgb(240, 238, 233);
 }
 
 .messageInputContainer {
   position: fixed;
+  z-index: 1;
   bottom: 10vh;
   left: 2vh;
   right: 2vh;
@@ -132,7 +152,7 @@
 }
 
 .messageInput {
-  background-color: aliceblue;
+  background-color: rgb(240, 238, 233);
   color: #333;
   width: 100%;
   padding: 1vh 2vw;
