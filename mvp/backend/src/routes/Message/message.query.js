@@ -7,13 +7,15 @@ async function getMessagePreview(id) {
     const response = await conn
       .collection("Events")
       .find({ participants: { $in: [new ObjectId(id)] } })
-      .sort({ "lastMessage.sentAt": 1 })
+      .sort({ "lastMessage.sentAt": -1 })
       .project({
+        _id: 1,
         title: "$title",
         photo: { $arrayElemAt: ["$photos", 0] },
         content: "$lastMessage.content",
         sentAt: "$lastMessage.sentAt",
         senderName: "$lastMessage.senderName",
+        senderId: "$lastMessage.userId",
       })
       .toArray();
     return response;
@@ -69,13 +71,44 @@ async function getMessageByGroupId(groupId, userId) {
 
 async function sendMessageByGroupId(groupId, userId, content) {
   const conn = await db();
-  const result = await conn.collection("Messages").insertOne({
-    groupId: new ObjectId(groupId),
-    userId: new ObjectId(userId),
-    content: content,
-    sentAt: new Date()
-  });
-  return result;
+  
+  try {
+    // Récupérer le nom de l'utilisateur
+    const user = await conn.collection("Users").findOne({ _id: new ObjectId(userId) });
+    const senderName = user?.firstname || "Unknown";
+    console.log("User found:", senderName, "userId:", userId);
+    
+    // Insérer le message
+    const result = await conn.collection("Messages").insertOne({
+      groupId: new ObjectId(groupId),
+      userId: new ObjectId(userId),
+      content: content,
+      sentAt: new Date()
+    });
+    console.log("Message inserted:", result.insertedId);
+    
+    // Mettre à jour le lastMessage de l'Event
+    const sentAt = new Date();
+    const updateResult = await conn.collection("Events").updateOne(
+      { _id: new ObjectId(groupId) },
+      {
+        $set: {
+          lastMessage: {
+            userId: new ObjectId(userId),
+            senderName: senderName,
+            content: content,
+            sentAt: sentAt
+          }
+        }
+      }
+    );
+    console.log("Event updated:", updateResult.modifiedCount, "matched:", updateResult.matchedCount);
+    
+    return result;
+  } catch (error) {
+    console.error("Error in sendMessageByGroupId:", error);
+    throw error;
+  }
 }
 
 module.exports = { getMessageByGroupId, getMessagePreview, getGroupInfoById, sendMessageByGroupId };

@@ -90,10 +90,8 @@ const messageView = () => {
             <div className="messageViewContainer">
                 {messages.map((message, index) => {
                     // const isTheSameAsPrevious = index > 0 && messages[index - 1].userId === message.userId;
-                    //date a revoir
                     const displayDate = index === 0 || (new Date(messages[index - 1].sentAt).toDateString() !== new Date(message.sentAt).toDateString());
                     const isMe = message.isMe;
-                    console.log(message.content, new Date(message.sentAt).toDateString(), displayDate)
                     return (
                         <div key={message._id} className={isMe ? "messageRight" : "messageLeft"}>
                             {displayDate && <div className="messageDate">{new Date(message.sentAt).toLocaleString()}</div>}
