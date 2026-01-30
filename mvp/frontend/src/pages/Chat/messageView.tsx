@@ -1,10 +1,8 @@
 import axios from "axios";
-import { use, useEffect, useState } from "react";
+import {useEffect, useState } from "react";
 import "./messageView.css";
 import { useNavigate } from "react-router-dom";
 import NavBar from "../../components/NavBar/NavBar";
-
-import { is } from "date-fns/locale";
 
 const messageView = () => {
     const navigate = useNavigate()
@@ -12,8 +10,6 @@ const messageView = () => {
     const [groupInfo, setGroupInfo] = useState<any>([]);
     const [inputValue, setInputValue] = useState<string>("");
     const groupId = window.location.pathname.split("/")[2];
-    //const conteneur = document.querySelector('messageViewContainer');
-    //conteneur.scrollTop = conteneur.scrollHeight;
     async function SearchGroup() {
         try {
             const response = await axios.get(`http://localhost:3000/groupInfo/${groupId}`, {
@@ -83,12 +79,13 @@ const messageView = () => {
             <div className="messageViewContainer">
                 {messages.map((message, index) => {
                     // const isTheSameAsPrevious = index > 0 && messages[index - 1].userId === message.userId;
-                    // const isWithin24H = index > 0 &&  new Date(message.sentAt).getTime() - new Date(messages[index - 1].sentAt).getTime() < 86400000;
+                    //date a revoir
+                    const displayDate = index === 0 || (new Date(messages[index - 1].sentAt).toDateString() !== new Date(message.sentAt).toDateString());
                     const isMe = message.isMe;
-
+                    console.log(message.content, new Date(message.sentAt).toDateString(), displayDate)
                     return (
                         <div key={message._id} className={isMe ? "messageRight" : "messageLeft"}>
-                            <div className="messageDate">{new Date(message.sentAt).toLocaleString()}</div>
+                            {displayDate && <div className="messageDate">{new Date(message.sentAt).toLocaleString()}</div>}
                             <div className="messageBlock">
                                 {!isMe && (
                                     <>
