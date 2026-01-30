@@ -3,8 +3,10 @@ import axios from "axios";
 import "./Profile_page.css";
 import NavBar from "../../components/NavBar/NavBar";
 import { useNavigate } from "react-router-dom";
+import { useAuth, withTokenCheck } from "../../hooks/useAuth";
 
 const Profile = () => {
+    const { checkTokenValidity } = useAuth();
     const [userData, setUserData] = useState<{
         firstname: string;
         aboutMe: string;
@@ -96,33 +98,35 @@ const Profile = () => {
     };
 
     const handleSaveCity = async () => {
-        const token = localStorage.getItem("token");
-        if (!token) {
-            window.alert("No token found. Please log in again.");
-            navigate("/login");
-            return;
-        }
-        
-        // Fermer la modal immédiatement
-        setShowEditCity(false);
-        
-        try {
-            await axios.put("http://localhost:3000/user",
-                { city: cityInput },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        "Content-Type": "application/json",
-                    },
-                }
-            );
+        await withTokenCheck(async () => {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                window.alert("No token found. Please log in again.");
+                navigate("/login");
+                return;
+            }
             
-            setUserData({ ...userData, city: cityInput });
-        } catch (error) {
-            console.error("Error updating city:", error);
-            // Réouvrir la modal en cas d'erreur
-            setShowEditCity(true);
-        }
+            // Fermer la modal immédiatement
+            setShowEditCity(false);
+            
+            try {
+                await axios.put("http://localhost:3000/user",
+                    { city: cityInput },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "Content-Type": "application/json",
+                        },
+                    }
+                );
+                
+                setUserData({ ...userData, city: cityInput });
+            } catch (error) {
+                console.error("Error updating city:", error);
+                // Réouvrir la modal en cas d'erreur
+                setShowEditCity(true);
+            }
+        }, checkTokenValidity);
     };
 
     return (

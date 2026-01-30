@@ -3,55 +3,66 @@ import {useEffect, useState } from "react";
 import "./messageView.css";
 import { useNavigate } from "react-router-dom";
 import NavBar from "../../components/NavBar/NavBar";
+import { useAuth, withTokenCheck } from "../../hooks/useAuth";
 
 const messageView = () => {
     const navigate = useNavigate()
+    const { checkTokenValidity } = useAuth();
     const [messages, setMessages] = useState<any[]>([]);
     const [groupInfo, setGroupInfo] = useState<any>([]);
     const [inputValue, setInputValue] = useState<string>("");
     const groupId = window.location.pathname.split("/")[2];
+    
     async function SearchGroup() {
-        try {
-            const response = await axios.get(`http://localhost:3000/groupInfo/${groupId}`, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
-            });
-            setGroupInfo(response.data);
-        } catch (error) {
-            console.error("Error fetching group data:", error);
-        }
-    }
-    async function SearchMessage() {
-        try {
-            const response = await axios.get(`http://localhost:3000/messageView/${groupId}`, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
-            });
-            setMessages(response.data.response);
-        } catch (error) {
-            console.error("Error fetching data:", error);
-        }
-    }
-    async function SendMessage() {
-        try {
-            if (inputValue.trim().length === 0) {
-                return;
+        await withTokenCheck(async () => {
+            try {
+                const response = await axios.get(`http://localhost:3000/groupInfo/${groupId}`, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                });
+                setGroupInfo(response.data);
+            } catch (error) {
+                console.error("Error fetching group data:", error);
             }
-            await axios.post(`http://localhost:3000/sendMessage/${groupId}`, {
-                content: inputValue,
-            }, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
-            });
-            setInputValue("");
-            SearchMessage();
-            //
-        } catch (error) {
-            console.error("Error sending message:", error);
-        }
+        }, checkTokenValidity);
+    }
+    
+    async function SearchMessage() {
+        await withTokenCheck(async () => {
+            try {
+                const response = await axios.get(`http://localhost:3000/messageView/${groupId}`, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                });
+                setMessages(response.data.response);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        }, checkTokenValidity);
+    }
+    
+    async function SendMessage() {
+        await withTokenCheck(async () => {
+            try {
+                if (inputValue.trim().length === 0) {
+                    return;
+                }
+                await axios.post(`http://localhost:3000/sendMessage/${groupId}`, {
+                    content: inputValue,
+                }, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                });
+                setInputValue("");
+                SearchMessage();
+                //
+            } catch (error) {
+                console.error("Error sending message:", error);
+            }
+        }, checkTokenValidity);
     }
 
 

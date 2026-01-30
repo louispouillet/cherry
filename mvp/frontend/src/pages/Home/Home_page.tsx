@@ -4,9 +4,11 @@ import "./Home_page.css";
 import NavBar from "../../components/NavBar/NavBar";
 import Filtre from "../../components/Filtre/Filtre";
 import { useNavigate } from "react-router-dom";
+import { useAuth, withTokenCheck } from "../../hooks/useAuth";
 
 const Home_page = () => {
   const navigate = useNavigate();
+  const { checkTokenValidity } = useAuth();
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [eventPictures, setEventPictures] = useState<string[]>([]);
@@ -45,38 +47,40 @@ const Home_page = () => {
   let events: any[] = [];
 
   async function event_loading() {
-    const token = localStorage.getItem("token");
+    await withTokenCheck(async () => {
+      const token = localStorage.getItem("token");
 
-    try {
-      const response_events = await axios.get(
-        `http://localhost:3000/events`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      events = response_events.data;
+      try {
+        const response_events = await axios.get(
+          `http://localhost:3000/events`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        events = response_events.data;
 
-      const data = await axios.get(
-        `http://localhost:3000/user`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+        const data = await axios.get(
+          `http://localhost:3000/user`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
 
-      const userId = data.data._id;
-      setUserId(userId);
-      const city_user = data.data.city;
+        const userId = data.data._id;
+        setUserId(userId);
+        const city_user = data.data.city;
 
-      const filteredEvents = events.filter(
-        (event: any) =>
-          event.city === city_user &&
-          !event.participants.includes(userId)
-      );
+        const filteredEvents = events.filter(
+          (event: any) =>
+            event.city === city_user &&
+            !event.participants.includes(userId)
+        );
 
-      setEvents_city(filteredEvents);
+        setEvents_city(filteredEvents);
 
-      if (filteredEvents.length === 0) {
-        setLoading(true);
+        if (filteredEvents.length === 0) {
+          setLoading(true);
+        }
+      } catch (err) {
+        console.error(err);
       }
-    } catch (err) {
-      console.error(err);
-    }
+    }, checkTokenValidity);
   }
 
   useEffect(() => {
@@ -148,32 +152,34 @@ const Home_page = () => {
   };
 
   async function AddUserToEvent() {
-    if (!currentEvent) return;
+    await withTokenCheck(async () => {
+      if (!currentEvent) return;
 
-    const token = localStorage.getItem("token");
+      const token = localStorage.getItem("token");
 
-    try {
-      await axios.post(
-        `http://localhost:3000/add_user_to_event`,
-        { event_id: currentEvent._id, user_id: UserId },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      try {
+        await axios.post(
+          `http://localhost:3000/add_user_to_event`,
+          { event_id: currentEvent._id, user_id: UserId },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
 
-      // Retirer l'événement de events_city
-      setEvents_city(prev => prev.filter(event => event._id !== currentEvent._id));
+        // Retirer l'événement de events_city
+        setEvents_city(prev => prev.filter(event => event._id !== currentEvent._id));
 
-      setFilteredEvents(prev => {
-        const newEvents = prev.slice(1);
+        setFilteredEvents(prev => {
+          const newEvents = prev.slice(1);
 
-        if (newEvents.length === 0) {
-          setLoading(true);
-        }
+          if (newEvents.length === 0) {
+            setLoading(true);
+          }
 
-        return newEvents;
-      });
-    } catch (err) {
-      console.error(err);
-    }
+          return newEvents;
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    }, checkTokenValidity);
   }
 
   const handleEventClick = () => {

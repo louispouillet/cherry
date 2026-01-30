@@ -5,6 +5,7 @@ import CreateEvent from "../../components/CreateEvent/CreateEvent";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth, withTokenCheck } from "../../hooks/useAuth";
 import {
   differenceInSeconds,
   differenceInMinutes,
@@ -16,17 +17,20 @@ import {
 
 const messagePreview = () => {
   const navigate = useNavigate();
+  const { checkTokenValidity } = useAuth();
   const [events, setEvents] = useState<any[]>([]);
 
   async function Search() {
-    try {
-      const response = await axios.get("http://localhost:3000/messagePreview", {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
-      setEvents(response.data.response);
-    } catch (error) {
-      console.error("Error fetching user data:", error);
-    }
+    await withTokenCheck(async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/messagePreview", {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        });
+        setEvents(response.data.response);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    }, checkTokenValidity);
   }
   
   function formatShortAgo(date: Date) {
