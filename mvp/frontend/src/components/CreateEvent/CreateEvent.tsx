@@ -167,8 +167,8 @@ const CreateEvent = ({ onClose }: CreateEventProps) => {
                                         value={formData.ageRange[0]}
                                         onChange={handleAgeChange}
                                         className="range-input-min"
-                                        
-                                        
+
+
                                     />
                                     <span className="range-value">{formData.ageRange[0]}</span>
                                 </div>
@@ -203,7 +203,7 @@ const CreateEvent = ({ onClose }: CreateEventProps) => {
                     </div>
                 </div>
             )}
-            
+
         </>
     );
 };
