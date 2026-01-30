@@ -82,7 +82,7 @@ const Register = () => {
                         <textarea id="description" placeholder="Description" className="input" onChange={(e) => setDescription(e.target.value)} required /><br></br>
                         <input id="city" placeholder="City" className="input" onChange={(e) => setCity(e.target.value)} required /><br></br>
                         <input id="hobbies" type="text" placeholder="Hobbies" className="input" onChange={(e) => setHobbies(e.target.value)} required /><br></br>
-                        <input id="pictures" type="text" placeholder="Photos URL (optional)" className="input" onChange={(e) => setPictures(e.target.value)} /><br></br>
+                        <input id="pictures" type="text" placeholder="Photos URL (optional)" className="input" onChange={(e) => setPictures(e.target.value)} required/><br></br>
                         <button type="submit" className="button" >Register</button>
                         <p style={{ color: "black" }}> Already registered ? <a href="/login"> Login here</a> </p>
                     </form>
