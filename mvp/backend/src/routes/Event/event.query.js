@@ -76,7 +76,10 @@ async function AddUserToEvent(event_id, user_id){
         const conn = await db();
         const result = await conn.collection('Events').updateOne(
             {_id: new ObjectId(event_id)},
-            {$addToSet : {participants : new ObjectId(user_id)}}
+            {
+                $addToSet : {participants : new ObjectId(user_id)},
+                $inc: {nbParticipants: 1}
+            }
         );
         console.log(result);
         return (result);

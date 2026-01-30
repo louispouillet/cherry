@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { ChangeEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import './CreateEvent.css';
 
 interface CreateEventProps {
@@ -8,46 +9,46 @@ interface CreateEventProps {
 }
 
 interface FormDataType {
-    name: string;
+    title: string;
     type: string;
     description: string;
-    pictures: string[];
-    ageRange: [number, number];
+    photos: string[];
+    ageMin: number;
+    date: string;
+    nbMax: number;
+    city: string;
 }
 
 const CreateEvent = ({ onClose }: CreateEventProps) => {
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState<'edit' | 'preview'>('edit');
     const [formData, setFormData] = useState<FormDataType>({
-        name: '',
+        title: '',
         type: '',
         description: '',
-        pictures: ['', '', ''],
-        ageRange: [18, 100]
+        photos: ['', '', ''],
+        ageMin: 18,
+        date: '',
+        nbMax: 10,
+        city: ''
     });
     const [showModal, setShowModal] = useState(false);
     const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
     const [tempUrl, setTempUrl] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({
             ...prev,
-            [name]: value
-        }));
-    };
-
-    const handleAgeChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.valueAsNumber;
-        setFormData(prev => ({
-            ...prev,
-            ageRange: [value, prev.ageRange[1]]
+            [name]: name === 'ageMin' || name === 'nbMax' ? parseInt(value) : value
         }));
     };
 
     const handlePictureClick = (index: number) => {
         setSelectedImageIndex(index);
-        setTempUrl(formData.pictures[index] || '');
+        setTempUrl(formData.photos[index] || '');
         setShowModal(true);
     };
 
@@ -59,14 +60,73 @@ const CreateEvent = ({ onClose }: CreateEventProps) => {
 
     const handleModalSave = () => {
         if (selectedImageIndex !== null) {
-            const newPictures = [...formData.pictures];
-            newPictures[selectedImageIndex] = tempUrl;
+            const newPhotos = [...formData.photos];
+            newPhotos[selectedImageIndex] = tempUrl;
             setFormData(prev => ({
                 ...prev,
-                pictures: newPictures
+                photos: newPhotos
             }));
         }
         handleModalClose();
+    };
+
+    const handleCreateEvent = async (e: React.FormEvent) => {
+        e.preventDefault();
+        
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            setError('You need to be logged in to create an event');
+            return;
+        }
+
+        // Vérifier que les 3 images sont fournies
+        if (formData.photos.length < 3 || formData.photos.some(photo => photo === '')) {
+            setError('Les 3 images sont obligatoires');
+            return;
+        }
+
+        setIsLoading(true);
+        setError(null);
+
+        try {
+            // Récupérer l'userId via le token
+            const userResponse = await axios.get('http://localhost:3000/user', {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            const userId = userResponse.data._id || userResponse.data.id;
+
+            if (!userId) {
+                setError('Unable to retrieve your information');
+                return;
+            }
+
+            const eventData = {
+                title: formData.title,
+                date: formData.date,
+                description: formData.description,
+                type: formData.type,
+                nbMax: formData.nbMax,
+                photos: formData.photos,
+                ageMin: formData.ageMin,
+                city: formData.city,
+                AdminId: userId
+            };
+
+            const response = await axios.post('http://localhost:3000/events/new', eventData, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            
+            if (response.status === 201) {
+                navigate('/home');
+            }
+        } catch (err) {
+            setError('Error while creating the event');
+            console.error(err);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -78,28 +138,60 @@ const CreateEvent = ({ onClose }: CreateEventProps) => {
                     <button className="back-btn" onClick={onClose || (() => navigate('/home'))}>
                         ← New Event
                     </button>
-                    <button className="create-btn" onClick={() => navigate('/home')}>Create</button>
+                    <button className="create-btn" onClick={handleCreateEvent} disabled={isLoading}>
+                        {isLoading ? 'Création...' : 'Create'}
+                    </button>
                 </div>
 
                 {/* Tabs */}
                 <div className="event-tabs">
                     <button className={`event-tab ${activeTab === 'edit' ? 'active' : ''}`} onClick={() => setActiveTab('edit')}>Edit</button>
-
                 </div>
+
+                {/* Error Message */}
+                {error && <div className="error-message">{error}</div>}
 
                 {/* Form Content */}
                 {activeTab === 'edit' && (
-                    <form className="create-event-form">
-                        {/* Name Field */}
+                    <form className="create-event-form" onSubmit={handleCreateEvent}>
+                        {/* Title Field */}
                         <div className="form-group">
-                            <label htmlFor="name">NAME</label>
+                            <label htmlFor="title">TITLE</label>
                             <input
                                 type="text"
-                                id="name"
-                                name="name"
-                                value={formData.name}
+                                id="title"
+                                name="title"
+                                value={formData.title}
                                 onChange={handleInputChange}
                                 placeholder=""
+                                required
+                            />
+                        </div>
+
+                        {/* Date Field */}
+                        <div className="form-group">
+                            <label htmlFor="date">DATE</label>
+                            <input
+                                type="date"
+                                id="date"
+                                name="date"
+                                value={formData.date}
+                                onChange={handleInputChange}
+                                required
+                            />
+                        </div>
+
+                        {/* City Field */}
+                        <div className="form-group">
+                            <label htmlFor="city">CITY</label>
+                            <input
+                                type="text"
+                                id="city"
+                                name="city"
+                                value={formData.city}
+                                onChange={handleInputChange}
+                                placeholder=""
+                                required
                             />
                         </div>
 
@@ -111,6 +203,7 @@ const CreateEvent = ({ onClose }: CreateEventProps) => {
                                 name="type"
                                 value={formData.type}
                                 onChange={handleInputChange}
+                                required
                             >
                                 <option value="">Sélectionner un type</option>
                                 <option value="sports">Sports</option>
@@ -130,48 +223,63 @@ const CreateEvent = ({ onClose }: CreateEventProps) => {
                                 value={formData.description}
                                 onChange={handleInputChange}
                                 placeholder=""
+                                required
                             />
                         </div>
 
-                        {/* Picture Upload */}
+                        {/* Photos Upload */}
                         <div className="form-group">
-                            <label>PICTURE</label>
+                            <label>PHOTOS</label>
                             <div className="picture-upload-container">
                                 {[0, 1, 2].map((index) => (
                                     <div
                                         key={index}
-                                        className={`picture-upload-box ${formData.pictures[index] ? 'has-image' : ''}`}
+                                        className={`picture-upload-box ${formData.photos[index] ? 'has-image' : ''}`}
                                         onClick={() => handlePictureClick(index)}
                                         style={{
-                                            backgroundImage: formData.pictures[index] ? `url(${formData.pictures[index]})` : 'none',
+                                            backgroundImage: formData.photos[index] ? `url(${formData.photos[index]})` : 'none',
                                             backgroundSize: 'cover',
                                             backgroundPosition: 'center',
-                                            backgroundColor: formData.pictures[index] ? 'transparent' : '#fafafa'
+                                            backgroundColor: formData.photos[index] ? 'transparent' : '#fafafa'
                                         }}
                                     >
-                                        {!formData.pictures[index] && <span>+</span>}
+                                        {!formData.photos[index] && <span>+</span>}
                                     </div>
                                 ))}
                             </div>
                         </div>
 
-
-                        {/* Age Range */}
+                        {/* Age Min Field */}
                         <div className="form-group">
-                            <label className="range-label">AGE MIN</label>
+                            <label className="range-label" htmlFor="ageMin">AGE MIN</label>
                             <div className="age-range-container">
                                 <input
                                     type="range"
+                                    id="ageMin"
+                                    name="ageMin"
                                     min="18"
                                     max="100"
-                                    value={formData.ageRange[0]}
-                                    onChange={handleAgeChange}
+                                    value={formData.ageMin}
+                                    onChange={handleInputChange}
                                     className="range-input-min"
-
-
                                 />
-                                <span className="range-value">{formData.ageRange[0]}</span>
+                                <span className="range-value">{formData.ageMin}</span>
                             </div>
+                        </div>
+
+                        {/* Max Participants Field */}
+                        <div className="form-group">
+                            <label htmlFor="nbMax">MAX PARTICIPANTS</label>
+                            <input
+                                type="number"
+                                id="nbMax"
+                                name="nbMax"
+                                min="1"
+                                placeholder="10"
+                                value={formData.nbMax === 10 ? '' : formData.nbMax}
+                                onChange={handleInputChange}
+                                required
+                            />
                         </div>
                     </form>
                 )}

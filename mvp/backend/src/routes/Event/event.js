@@ -43,19 +43,22 @@ router.get('/events/:id/users', async (req, res) => {
 // créer un nouvel event
 router.post('/events/new', async (req, res) => {
     try {
-        const { firstname, lastname, date, description, type, nb_participant_limit, pictures } = req.body;
+        const { title, date, description, type, nbMax, photos, ageMin, city, AdminId } = req.body;
 
         const newEvent = {
-            firstname : firstname,
-            lastname: lastname,
+            title: title,
             date: date,
             type: type,
             description: description,
-            pictures: pictures,
-            nb_participant_limit: nb_participant_limit,
-            nb_participant_join: 0,
+            photos: photos,
+            nbMax: nbMax,
+            ageMin: ageMin,
+            nbParticipants: 1,
+            AdminId: AdminId,
+            city: city,
             status: 'joinable', 
-            users: [] // Initialise avec une liste vide d'utilisateurs
+            lastMessage: {},
+            participants: [new ObjectId(AdminId)] // Ajouter l'admin comme premier participant
         };
         const result = await CreateEvent(newEvent);
 

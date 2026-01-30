@@ -1,7 +1,6 @@
 import axios from "axios";
 import "./messagePreview.css";
 import NavBar from "../../components/NavBar/NavBar";
-import CreateEvent from "../CreateEvent/CreateEvent";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -32,24 +31,24 @@ const messagePreview = () => {
       }
     }, checkTokenValidity);
   }
-  
+
   function formatShortAgo(date: Date) {
     const now = new Date();
     const sec = differenceInSeconds(now, date);
     if (sec < 60) return `${sec} s`;
-  
+
     const mins = differenceInMinutes(now, date);
     if (mins < 60) return `${mins} min`;
-  
+
     const hrs = differenceInHours(now, date);
     if (hrs < 24) return `${hrs} h`;
-  
+
     const days = differenceInDays(now, date);
     if (days < 30) return `${days} d`;
-  
+
     const months = differenceInMonths(now, date);
     if (months < 12) return `${months} m`;
-  
+
     const years = differenceInYears(now, date);
     return `${years} y`;
   }

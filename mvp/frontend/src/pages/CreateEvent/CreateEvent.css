@@ -1,15 +1,13 @@
 .create-event-container {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    top: 0;
-    left: 0;
     width: 100vw;
     height: 100vh;
-    background: transparent;
-    position: fixed;
     background-color: #faebd7;
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow: hidden;
 }
 
 .create-event-content {
@@ -29,6 +27,7 @@
     align-items: center;
     padding: 40px 50px 40px;
     border-bottom: 1px solid #f0f0f0;
+    flex-shrink: 0;
 }
 
 .event-header h2 {
@@ -44,7 +43,19 @@
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 24px;
+    padding: 8px 16px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.event-header .create-btn:hover:not(:disabled) {
+    background-color: rgba(255, 56, 100, 0.1);
+}
+
+.event-header .create-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
 .event-tabs {
@@ -52,6 +63,8 @@
     gap: 30px;
     padding: 20px 20px 0;
     border-bottom: 1px solid #f0f0f0;
+    flex-shrink: 0;
+    justify-content: center;
 }
 
 .event-tab {
@@ -63,6 +76,7 @@
     color: #999;
     border-bottom: 3px solid transparent;
     transition: all 0.3s ease;
+    font-size: 24px;
 }
 
 .event-tab.active {
@@ -74,7 +88,11 @@
     display: flex;
     flex-direction: column;
     gap: 25px;
-    padding: 30px 20px;
+    padding: 30px 40px;
+    flex: 1;
+    overflow-y: auto;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .form-group {
@@ -179,7 +197,7 @@
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 24px;
     font-weight: 800;
     color: #1f0f1c;
 }
@@ -292,4 +310,14 @@
 
 .modal-btn.save:hover {
     background: #ff1050;
+}
+
+.error-message {
+    background-color: #ffebee;
+    color: #c62828;
+    padding: 12px 20px;
+    border-left: 4px solid #c62828;
+    margin: 0;
+    font-size: 14px;
+    font-weight: 500;
 }

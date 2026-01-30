@@ -6,6 +6,14 @@ import Filtre from "../../components/Filtre/Filtre";
 import { useNavigate } from "react-router-dom";
 import { useAuth, withTokenCheck } from "../../hooks/useAuth";
 
+// Pour les messages si l'utilisateur cree un event il est admin de l'event et peux le voir directement dans la messagerie
+// Quand on rejoint un event on ajoute l'user id dans la liste des participants de l'event et on ajoute un au nbParticipants
+// On verifie que la date de l'event est bien superieur a la date actuelle sinon on met le status finished
+// On verifie que l'age min est bien inferieur a l'age de l'utilisateur
+// On verifie que l'event n'est pas plein avant de rejoindre sinon on met le status full
+// On verifie donc en plus que l'events a le status joinable pour l'afficher 
+
+
 const Home_page = () => {
   const navigate = useNavigate();
   const { checkTokenValidity } = useAuth();
@@ -65,11 +73,49 @@ const Home_page = () => {
         const userId = data.data._id;
         setUserId(userId);
         const city_user = data.data.city;
+        const birthDate = data.data.birthDate;
+
+        // Calculer l'âge de l'utilisateur à partir de sa date de naissance
+        const calculateAge = (birthDate: string): number => {
+          const today = new Date();
+          const birth = new Date(birthDate);
+          let age = today.getFullYear() - birth.getFullYear();
+          const monthDiff = today.getMonth() - birth.getMonth();
+
+          // Ajuster si l'anniversaire n'est pas encore passé cette année
+          if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+            age--;
+          }
+
+          return age;
+        };
+
+        const userAge = birthDate ? calculateAge(birthDate) : 18;
 
         const filteredEvents = events.filter(
-          (event: any) =>
-            event.city === city_user &&
-            !event.participants.includes(userId)
+          (event: any) => {
+            // Vérifier la ville
+            if (event.city !== city_user) return false;
+
+            // Vérifier que ce n'est pas un événement créé par l'utilisateur
+            if (event.AdminId === userId) return false;
+
+            // Vérifier que l'utilisateur n'a pas déjà rejoint l'événement
+            if (event.participants.includes(userId)) return false;
+
+            // Vérifier que la date n'est pas passée
+            const eventDate = new Date(event.date);
+            const today = new Date();
+            if (eventDate < today) return false;
+
+            // Vérifier l'âge minimum
+            if (userAge < event.ageMin) return false;
+
+            // Vérifier que l'événement n'est pas plein
+            if (event.nbParticipants >= event.nbMax) return false;
+
+            return true;
+          }
         );
 
         setEvents_city(filteredEvents);
@@ -90,7 +136,7 @@ const Home_page = () => {
   useEffect(() => {
     // Ne pas réinitialiser filteredEvents pendant un swipe
     if (swipeDirection) return;
-    
+
     if (selectedFilters.activityTypes.length === 0) {
       setFilteredEvents(events_city);
     } else {
@@ -160,12 +206,24 @@ const Home_page = () => {
       try {
         await axios.post(
           `http://localhost:3000/add_user_to_event`,
-          { event_id: currentEvent._id, user_id: UserId },
+          { 
+            event_id: currentEvent._id, 
+            user_id: UserId,
+            increment_participants: true // Pour dire au backend d'incrémenter nbParticipants
+          },
           { headers: { Authorization: `Bearer ${token}` } }
         );
 
-        // Retirer l'événement de events_city
-        setEvents_city(prev => prev.filter(event => event._id !== currentEvent._id));
+        // Mettre à jour l'événement localement pour refléter l'ajout
+        setEvents_city(prev => prev.map(event => 
+          event._id === currentEvent._id 
+            ? { 
+                ...event, 
+                participants: [...event.participants, UserId],
+                nbParticipants: event.nbParticipants + 1
+              }
+            : event
+        ).filter(event => event._id !== currentEvent._id)); // Puis le retirer de la liste
 
         setFilteredEvents(prev => {
           const newEvents = prev.slice(1);
