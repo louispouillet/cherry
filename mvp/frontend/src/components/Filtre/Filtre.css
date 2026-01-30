@@ -1,0 +1,172 @@
+.filter-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    z-index: 1000;
+}
+
+.filter-modal-content {
+    background: #faebd7;
+    border-radius: 20px 20px 0 0;
+    padding: 30px 20px;
+    box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+    max-height: 80vh;
+    overflow-y: auto;
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.filter-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.filter-modal-header h2 {
+    margin: 0;
+    font-size: 24px;
+    color: #000000;
+    font-weight: 600;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: #000000;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+    color: #FF9FC9;
+    transform: scale(1.2);
+}
+
+.filter-section {
+    margin-bottom: 24px;
+}
+
+.filter-section h3 {
+    margin: 0 0 12px 0;
+    font-size: 16px;
+    color: #000000;
+    font-weight: 600;
+}
+
+.activity-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.activity-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #faf0e6;
+    transition: all 0.3s ease;
+}
+
+.activity-checkbox:hover {
+    background-color: #efefef;
+}
+
+.activity-checkbox input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #FF9FC9;
+}
+
+.activity-checkbox span {
+    font-size: 14px;
+    color: #000000;
+    font-weight: 500;
+}
+
+.activity-checkbox input[type="checkbox"]:checked+span {
+    color: #FF9FC9;
+    font-weight: 600;
+}
+
+.filter-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 30px;
+}
+
+.reset-btn,
+.apply-btn {
+    flex: 1;
+    padding: 14px 24px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.reset-btn {
+    background-color: #faf0e6;
+    color: #000000;
+}
+
+.reset-btn:hover {
+    background-color: #d0d0d0;
+    transform: scale(1.02);
+}
+
+.apply-btn {
+    background-color: #FF9FC9;
+    color: white;
+}
+
+.apply-btn:hover {
+    background-color: #ff7db5;
+    transform: scale(1.02);
+}
+
+@media (max-width: 600px) {
+    .filter-modal-content {
+        padding: 20px 16px;
+    }
+
+    .activity-list {
+        grid-template-columns: 1fr;
+    }
+
+    .filter-modal-header h2 {
+        font-size: 20px;
+    }
+}

@@ -2,14 +2,18 @@ import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import "./Home_page.css";
 import NavBar from "../../components/NavBar/NavBar";
+import Filtre from "../../components/Filtre/Filtre";
 import { useNavigate } from "react-router-dom";
+import { useAuth, withTokenCheck } from "../../hooks/useAuth";
 
 const Home_page = () => {
   const navigate = useNavigate();
+  const { checkTokenValidity } = useAuth();
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [eventPictures, setEventPictures] = useState<string[]>([]);
   const [isEventExpanded, setIsEventExpanded] = useState(false);
+  const [showFilterModal, setShowFilterModal] = useState(false);
   const [eventDate, setEventDate] = useState("");
   const [eventDescription, setEventDescription] = useState("");
   const [eventTitle, setEventTitle] = useState("");
@@ -21,62 +25,62 @@ const Home_page = () => {
 
   const totalImages = eventPictures.length;
   const [events_city, setEvents_city] = useState<any[]>([]);
+  const [filteredEvents, setFilteredEvents] = useState<any[]>([]);
+  const [selectedFilters, setSelectedFilters] = useState<any>({ activityTypes: [] });
 
   const [swipeStart, setSwipeStart] = useState<number | null>(null);
   const [swipeDirection, setSwipeDirection] = useState<'left' | 'right' | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [dragX, setDragX] = useState(0);
   const [gestureLocked, setGestureLocked] = useState(false);
+  const [hasMoved, setHasMoved] = useState(false);
   const imageRef = useRef<HTMLImageElement>(null);
 
-  const [nextEventPictures, setNextEventPictures] = useState<string[]>([]);
-  const [nextEventDate, setNextEventDate] = useState("");
-  const [nextEventDescription, setNextEventDescription] = useState("");
-  const [nextEventTitle, setNextEventTitle] = useState("");
-
-  const currentEvent = events_city[0];
-  const nextEvent = events_city[1];
+  const currentEvent = filteredEvents[0];
+  const nextEvent = filteredEvents[1];
 
   const monthNames = [
-    "January","February","March","April","May","June",
-    "July","August","September","October","November","December"
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
   ];
 
   let events: any[] = [];
 
   async function event_loading() {
-    const token = localStorage.getItem("token");
+    await withTokenCheck(async () => {
+      const token = localStorage.getItem("token");
 
-    try {
-      const response_events = await axios.get(
-        `http://localhost:3000/events`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      events = response_events.data;
+      try {
+        const response_events = await axios.get(
+          `http://localhost:3000/events`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        events = response_events.data;
 
-      const data = await axios.get(
-        `http://localhost:3000/user`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+        const data = await axios.get(
+          `http://localhost:3000/user`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
 
-      const userId = data.data._id;
-      setUserId(userId);
-      const city_user = data.data.city;
+        const userId = data.data._id;
+        setUserId(userId);
+        const city_user = data.data.city;
 
-      const filteredEvents = events.filter(
-        (event: any) =>
-          event.city === city_user &&
-          !event.participants.includes(userId)
-      );
+        const filteredEvents = events.filter(
+          (event: any) =>
+            event.city === city_user &&
+            !event.participants.includes(userId)
+        );
 
-      setEvents_city(filteredEvents);
+        setEvents_city(filteredEvents);
 
-      if (filteredEvents.length === 0) {
-        setLoading(true);
+        if (filteredEvents.length === 0) {
+          setLoading(true);
+        }
+      } catch (err) {
+        console.error(err);
       }
-    } catch (err) {
-      console.error(err);
-    }
+    }, checkTokenValidity);
   }
 
   useEffect(() => {
@@ -84,7 +88,23 @@ const Home_page = () => {
   }, []);
 
   useEffect(() => {
+    // Ne pas réinitialiser filteredEvents pendant un swipe
+    if (swipeDirection) return;
+    
+    if (selectedFilters.activityTypes.length === 0) {
+      setFilteredEvents(events_city);
+    } else {
+      const filtered = events_city.filter((event: any) =>
+        selectedFilters.activityTypes.includes(event.type)
+      );
+      setFilteredEvents(filtered);
+    }
+  }, [events_city, selectedFilters, swipeDirection]);
+
+  useEffect(() => {
     if (!currentEvent) return;
+    // Ne pas mettre à jour pendant l'animation de swipe
+    if (swipeDirection) return;
 
     setEventPictures(currentEvent.photos || []);
     setEventDate(currentEvent.date);
@@ -94,53 +114,88 @@ const Home_page = () => {
     setEventNbMaxParticipants(currentEvent.nbMax);
     setEventAge(currentEvent.ageMin);
     setCurrentImageIndex(0);
+  }, [currentEvent, swipeDirection]);
 
-    if (nextEvent) {
-      setNextEventPictures(nextEvent.photos || []);
-      setNextEventDate(nextEvent.date);
-      setNextEventDescription(nextEvent.description);
-      setNextEventTitle(nextEvent.title);
+  const handleApplyFilter = (filters: any) => {
+
+    setSelectedFilters(filters);
+
+    let filteredList: any[];
+    if (filters.activityTypes.length === 0) {
+      // Si aucun filtre n'est sélectionné, afficher tous les événements
+      filteredList = events_city;
     } else {
-      setNextEventPictures([]);
+      // Filtrer les événements selon les types d'activité sélectionnés
+      filteredList = events_city.filter((event: any) =>
+        filters.activityTypes.includes(event.type)
+      );
     }
-  }, [events_city]);
+
+    setFilteredEvents(filteredList);
+
+    // Mettre à jour l'état loading en fonction du nombre d'événements filtrés
+    if (filteredList.length === 0) {
+      setLoading(true);
+    } else {
+      setLoading(false);
+    }
+  };
+
+  const handleCloseFilter = () => {
+    setShowFilterModal(false);
+  };
+
+  const handleCloseWithoutFilters = () => {
+    // Si on clique hors du modal sans sélectionner de filtres, réinitialiser
+    handleApplyFilter({ activityTypes: [] });
+    setShowFilterModal(false);
+  };
 
   async function AddUserToEvent() {
-    if (!currentEvent) return;
+    await withTokenCheck(async () => {
+      if (!currentEvent) return;
 
-    const token = localStorage.getItem("token");
+      const token = localStorage.getItem("token");
 
-    try {
-      await axios.post(
-        `http://localhost:3000/add_user_to_event`,
-        { event_id: currentEvent._id, user_id: UserId },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      try {
+        await axios.post(
+          `http://localhost:3000/add_user_to_event`,
+          { event_id: currentEvent._id, user_id: UserId },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
 
-      setEvents_city(prev => {
-        const newEvents = prev.slice(1); 
+        // Retirer l'événement de events_city
+        setEvents_city(prev => prev.filter(event => event._id !== currentEvent._id));
 
-        if (newEvents.length === 0) {
-          setLoading(true);
-        }
+        setFilteredEvents(prev => {
+          const newEvents = prev.slice(1);
 
-        return newEvents;
-      });
-    } catch (err) {
-      console.error(err);
-    }
+          if (newEvents.length === 0) {
+            setLoading(true);
+          }
+
+          return newEvents;
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    }, checkTokenValidity);
   }
 
   const handleEventClick = () => {
-    setCurrentImageIndex(prev =>
-      prev === totalImages - 1 ? 0 : prev + 1
-    );
+    // Ne changer d'image que si l'utilisateur n'a pas bougé (vrai clic)
+    if (!hasMoved) {
+      setCurrentImageIndex(prev =>
+        prev === totalImages - 1 ? 0 : prev + 1
+      );
+    }
   };
 
   const handleSwipeStart = (e: any) => {
     if (isEventExpanded || swipeDirection || gestureLocked) return;
 
     setSwipeStart('touches' in e ? e.touches[0].clientX : e.clientX);
+    setHasMoved(false);
     if (!('touches' in e)) setIsDragging(true);
   };
 
@@ -149,12 +204,13 @@ const Home_page = () => {
     const currentX = 'touches' in e ? e.touches[0].clientX : e.clientX;
     const diff = swipeStart - currentX;
     if (Math.abs(diff) > 5) {
+      setHasMoved(true);
       setIsDragging(true);
       setDragX(-diff);
     }
   };
 
-  const handleSwipeEnd = (e: any) => {
+  const handleSwipeEnd = async (e: any) => {
     if (isEventExpanded || swipeStart === null || swipeDirection || gestureLocked) return;
 
     const endX = 'changedTouches' in e ? e.changedTouches[0].clientX : e.clientX;
@@ -168,22 +224,38 @@ const Home_page = () => {
     if (Math.abs(diff) > 150) {
       if (diff > 0) {
         setSwipeDirection('left');
+        // Attendre la fin de l'animation CSS (500ms) avant de mettre à jour
         setTimeout(() => {
+          // Mettre à jour filteredEvents à la fin de l'animation
+          setFilteredEvents(prev => {
+            if (prev.length <= 1) return prev;
+            const [first, ...rest] = prev;
+            return [...rest, first];
+          });
+          // Aussi mettre à jour events_city pour garder la synchronisation
           setEvents_city(prev => {
             if (prev.length <= 1) return prev;
             const [first, ...rest] = prev;
             return [...rest, first];
           });
-          setSwipeDirection(null);
-          setGestureLocked(false);
-        }, 400);
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              setSwipeDirection(null);
+              setGestureLocked(false);
+            });
+          });
+        }, 500);
       } else {
         setSwipeDirection('right');
-        AddUserToEvent();
-        setTimeout(() => {
-          setSwipeDirection(null);
-          setGestureLocked(false);
-        }, 400);
+        // Attendre que AddUserToEvent ait terminé
+        await AddUserToEvent();
+        // Utiliser requestAnimationFrame pour synchroniser avec la mise à jour de React
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            setSwipeDirection(null);
+            setGestureLocked(false);
+          });
+        });
       }
     } else {
       setGestureLocked(false);
@@ -204,7 +276,7 @@ const Home_page = () => {
                   </svg>
 
                 </div>
-                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon_filter">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon_filter" onClick={() => setShowFilterModal(true)} style={{ cursor: 'pointer' }}>
                   <path d="M10 5H3" />
                   <path d="M12 19H3" />
                   <path d="M14 3v4" />
@@ -245,8 +317,8 @@ const Home_page = () => {
           )}
 
           {/* Prochain événement en arrière-plan */}
-          {!isEventExpanded && (isDragging || swipeDirection) && nextEventPictures.length > 0 && (
-            <div 
+          {!isEventExpanded && (isDragging || swipeDirection) && nextEvent && nextEvent.photos && nextEvent.photos.length > 0 && (
+            <div
               className="next-event"
               style={{
                 opacity: swipeDirection ? 1 : 0.5,
@@ -255,22 +327,22 @@ const Home_page = () => {
             >
               <div className="event_info_container">
                 <div className={`indice_image ${isDragging ? 'hidden' : ''}`}>
-                  {nextEventPictures.map((_, index) => (
+                  {nextEvent.photos.map((_: any, index: number) => (
                     <div
                       key={index}
                       className={`indice_bar ${index === 0 ? 'active' : ''}`}
-                      style={{ width: `calc((90vw - ${(nextEventPictures.length - 1) * 8}px) / ${nextEventPictures.length})`, maxWidth: `${320 / nextEventPictures.length}px` }}
+                      style={{ width: `calc((90vw - ${(nextEvent.photos.length - 1) * 8}px) / ${nextEvent.photos.length})`, maxWidth: `${320 / nextEvent.photos.length}px` }}
                     >
                     </div>
                   ))}
                 </div>
 
                 <div className="event_date">
-                  <h2>{nextEventDate.substring(8, 10)} {monthNames[parseInt(nextEventDate.substring(5, 7)) - 1]} {nextEventDate.substring(0, 4)}</h2>
+                  <h2>{nextEvent.date.substring(8, 10)} {monthNames[parseInt(nextEvent.date.substring(5, 7)) - 1]} {nextEvent.date.substring(0, 4)}</h2>
                 </div>
                 <div className="event_info">
-                  <h2 className="event_title">{nextEventTitle}</h2>
-                  <p className="event_description">{nextEventDescription}</p>
+                  <h2 className="event_title">{nextEvent.title}</h2>
+                  <p className="event_description">{nextEvent.description}</p>
                   <div className="icon_details">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-move-up-icon lucide-move-up"><path d="M8 6L12 2L16 6" /><path d="M12 2V22" /></svg>
                   </div>
@@ -279,7 +351,7 @@ const Home_page = () => {
 
               <img
                 className="event_img"
-                src={nextEventPictures[0]}
+                src={nextEvent.photos[0]}
                 alt="Next event"
                 draggable={false}
                 onDragStart={(e) => e.preventDefault()}
@@ -299,8 +371,8 @@ const Home_page = () => {
             onMouseMove={handleSwipeMove}
             onMouseLeave={handleSwipeEnd}
             style={{
-              transform: isDragging && !swipeDirection ? `translateX(${dragX}px) rotate(${dragX / 10}deg)` : 'none',
-              transition: isDragging ? 'none' : 'transform 0.3s ease'
+              transform: isDragging && !swipeDirection ? `translateX(${dragX}px) rotate(${dragX / 10}deg)` : '',
+              transition: isDragging && !swipeDirection ? 'none' : ''
             }}
           >
             <div className={`indice_image ${isDragging ? 'hidden' : ''}`}>
@@ -412,7 +484,7 @@ const Home_page = () => {
                   <path d="M12 5v14" />
                 </svg>
               </div>
-              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon_filter">
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon_filter" onClick={() => setShowFilterModal(true)} style={{ cursor: 'pointer' }}>
                 <path d="M10 5H3" />
                 <path d="M12 19H3" />
                 <path d="M14 3v4" />
@@ -431,6 +503,14 @@ const Home_page = () => {
           </div>
         </div>
       )}
+
+      <Filtre
+        isOpen={showFilterModal}
+        onClose={handleCloseFilter}
+        onApplyFilter={handleApplyFilter}
+        onCloseWithoutFilters={handleCloseWithoutFilters}
+      />
+
       <NavBar />
     </>
   );

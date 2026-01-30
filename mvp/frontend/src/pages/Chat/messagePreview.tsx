@@ -5,6 +5,7 @@ import CreateEvent from "../../components/CreateEvent/CreateEvent";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth, withTokenCheck } from "../../hooks/useAuth";
 import {
   differenceInSeconds,
   differenceInMinutes,
@@ -16,17 +17,20 @@ import {
 
 const messagePreview = () => {
   const navigate = useNavigate();
+  const { checkTokenValidity } = useAuth();
   const [events, setEvents] = useState<any[]>([]);
 
   async function Search() {
-    try {
-      const response = await axios.get("http://localhost:3000/messagePreview", {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
-      setEvents(response.data.response);
-    } catch (error) {
-      console.error("Error fetching user data:", error);
-    }
+    await withTokenCheck(async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/messagePreview", {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        });
+        setEvents(response.data.response);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    }, checkTokenValidity);
   }
   
   function formatShortAgo(date: Date) {
@@ -59,7 +63,7 @@ const messagePreview = () => {
       <div className="messagePreviewHeader">
         <div className="messagePreviewFirstLine">
           <div className="messagePreviewTitle">Message</div>
-          {/* <CreateEvent /> */}
+          <svg onClick={() => navigate("/create-event")} style={{ cursor: 'pointer' }} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="plusIcon"><path d="M5 12h14" /><path d="M12 5v14" /></svg>
         </div>
         <div className="messagePreviewSecondLine">
           <SearchBar />
